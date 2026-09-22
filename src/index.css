@@ -1,0 +1,43 @@
+:root {
+    --bg-dark: hsl(189 54% 1%);
+    --bg: hsl(187 33% 4%);
+    --bg-light: hsl(187 18% 8%);
+    --text: hsl(187 61% 93%);
+    --text-muted: hsl(187 12% 68%);
+    --highlight: hsl(187 10% 38%);
+    --border: hsl(187 13% 27%);
+    --border-muted: hsl(187 20% 17%);
+    --primary: hsl(186 56% 58%);
+    --primary-light: hsl(186, 90%, 73%);
+    --secondary: hsl(207, 52%, 36%);
+    --secondary-light: hsl(207, 54%, 51%);
+    --danger: hsl(9 26% 64%);
+    --warning: hsl(52 19% 57%);
+    --success: hsl(146 17% 59%);
+    --info: hsl(217 28% 65%);
+}
+body.light {
+  --bg-dark: hsl(187 18% 89%);
+  --bg: hsl(187 34% 94%);
+  --bg-light: hsl(187 100% 99%);
+  --text: hsl(188 74% 3%);
+  --text-muted: hsl(187 13% 27%);
+  --highlight: hsl(187 100% 98%);
+  --border: hsl(187 8% 49%);
+  --border-muted: hsl(187 10% 61%);
+  --primary: hsl(185 100% 10%);
+  --primary-light: hsl(185, 98%, 20%);
+  --secondary: hsl(213, 68%, 32%);
+  --secondary-light: hsl(213, 67%, 43%);
+  --danger: hsl(9 21% 41%);
+  --warning: hsl(52 23% 34%);
+  --success: hsl(147 19% 36%);
+  --info: hsl(217 22% 41%);
+}
+body {
+    margin: 0;
+    box-sizing: border-box;
+}
+* {
+    text-decoration: none;
+}
