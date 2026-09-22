@@ -35,7 +35,7 @@ function Homepage() {
                 <span className="nav-item">Team</span>
               </NavLink>
             </div>
-          </nav>
+        </nav>
         <section className="home-feed">
 
           <header className="feed-header">
