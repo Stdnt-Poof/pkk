@@ -1,5 +1,13 @@
 import { NavLink } from "react-router-dom"
 
+// Temporary dummy posts to test scrolling with the sticky sidebar
+const DUMMY_POSTS = Array.from({ length: 30 }, (_, i) => ({
+  id: i + 1,
+  author: `User ${i + 1}`,
+  handle: `@user${i + 1}`,
+  text: `This is dummy post #${i + 1}. Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+}))
+
 function Homepage() {
   return (
     <div className="page-layout home-page-layout">
@@ -35,7 +43,12 @@ function Homepage() {
           </header>
 
           <div className="feed-content">
-            <p className="feed-empty">Feed Empty.</p>
+            {DUMMY_POSTS.map((post) => (
+              <article key={post.id} className="feed-post">
+                <h3>{post.author} <span>{post.handle}</span></h3>
+                <p>{post.text}</p>
+              </article>
+            ))}
           </div>
         </section>
       </main>

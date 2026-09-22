@@ -161,7 +161,8 @@
 /* ---------- Home ---------- */
 .app-shell {
   display: grid;
-  min-height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   grid-template-columns: clamp(12rem, 20vw, 15rem) minmax(0, 1fr);
 }
 .page-layout {
@@ -181,12 +182,20 @@
   border-right: 1px solid black;
   background-color: orange;
   align-self: start;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
+  flex-shrink: 0;
+  top: 0;
   position: sticky;
   flex-direction: column;
   gap: 4px;
-  padding: 0px 12px;
+  padding: 12px 12px;
+}
+.app-shell > :nth-child(2) {
+  min-width: 0;
+  min-height: 0;
+  height: 100dvh;
+  overflow-y: auto;
 }
 .brand {
   display: inline-flex;
@@ -250,6 +259,7 @@
 .primary-navigation {
   display: flex;
   align-items: center;
+  top: 0;
   position: sticky;
   gap: 4px;
   padding: 8px 16px;
@@ -273,7 +283,12 @@
 /* Right sidebar */
 .right-sidebar {
   border-left: 1px solid black;
+  top: 0;
+  overflow-y: auto;
+  align-self: start;
+  height: 100dvh;
   display: flex;
+  flex-shrink: 0;
   flex-direction: column;
   position: sticky;
   gap: 16px;
@@ -281,6 +296,7 @@
 }
 .search-bar {
   width: 100%;
+  top: 0;
   padding: 10px 16px;
   border: 1px solid black;
   border-radius: 50px;
@@ -288,6 +304,7 @@
   font-family: inherit;
 }
 .messages-panel {
+  background-color: blue;
   margin-top: 40%;
   display: flex;
   flex-direction: column;
@@ -322,9 +339,28 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
   padding: 40px 20px;
+  gap: 12px;
+}
+.feed-post {
+  background: #fff;
+  border: 1px solid #dfe4e9;
+  border-radius: 12px;
+  padding: 16px;
+}
+.feed-post h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+}
+.feed-post h3 span {
+  color: #687781;
+  font-weight: 400;
+}
+.feed-post p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 .feed-empty {
   margin: 0;
