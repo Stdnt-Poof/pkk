@@ -301,7 +301,6 @@
 }
 .search-bar {
   width: 100%;
-  top: 0;
   padding: 10px 16px;
   border: 1px solid black;
   border-radius: 50px;
@@ -495,6 +494,34 @@
 /* Messages */
 .chats {
   background-color: red;
+  overflow-y: auto;
+}
+.search-container {
+  position: sticky;
+  background-color: rgba(171, 170, 170, 0.414);
+  backdrop-filter: blur(12px), saturate(18px);
+  -webkit-backdrop-filter: blur(12px), saturate(18px);
+  top: 0;
+  display: flex;
+  justify-content: center;  
+}
+.Search-bar {
+  margin: 4px;
+  width: 90%;
+  padding: 8px 16px;
+  border: 1px solid black;
+  border-radius: 50px;
+  outline: 0;
+  font-family: inherit;
+}
+.dm-content {
+  display: flex;
+  flex-direction: column;
+  background-color: navajowhite;
+}
+.dm-item {
+  border-radius: 10px;
+  background-color: navajowhite;
 }
 .messages {
   background-color: orange;

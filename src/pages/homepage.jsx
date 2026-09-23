@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom"
 
-// Temporary dummy posts to test scrolling with the sticky sidebar
+// temp
 const DUMMY_POSTS = Array.from({ length: 30 }, (_, i) => ({
   id: i + 1,
   author: `User ${i + 1}`,
