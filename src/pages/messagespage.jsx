@@ -14,8 +14,12 @@ function Messagespage() {
                 </div>
                 <div className="dm-content">
                     {dummy_dm.map((dm) => (
-                        <button type="button" className='dm-item' >
-                            <h4>{dm.id}</h4>
+                        <button type="button" className='dm-item' key={dm.id}>
+                            <span className="dm-avatar" aria-hidden="true" />
+                            <span className="dm-meta">
+                                <span className="dm-author">{dm.author}</span>
+                                <span className="dm-preview">{dm.text}</span>
+                            </span>
                         </button>
                     ))}
                 </div>

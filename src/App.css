@@ -517,11 +517,51 @@
 .dm-content {
   display: flex;
   flex-direction: column;
-  background-color: navajowhite;
+  gap: 4px;
+  padding: 8px;
+  background-color: navy;
 }
 .dm-item {
-  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 40px;
   background-color: navajowhite;
+  border: 1px solid black;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.dm-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ccc;
+  flex-shrink: 0;
+}
+.dm-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.dm-author {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.dm-preview {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .messages {
   background-color: orange;
