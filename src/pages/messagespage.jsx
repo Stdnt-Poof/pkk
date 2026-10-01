@@ -34,18 +34,40 @@ function Messagespage() {
         </div>
       </main>
       <aside className="messages">
-        <div className="dm-msg">
-          {activeDm ? (
+        {activeDm ? (
+          <section className="conversation" aria-label={`Conversation with ${activeDm.author}`}>
             <header className='dm-header'>
-                <div className='dm-info'>
-                    <div className="dm-header-avatar" aria-hidden="true" />
-                    <div className='dm-header-user'>{activeDm.author}</div>
-                </div>
+              <div className='dm-info'>
+                <div className="dm-header-avatar" aria-hidden="true" />
+                <div className='dm-header-user'>{activeDm.author}</div>
+              </div>
             </header>
-          ) : (
-            <h1>temp</h1>
-          )}
-        </div>
+            <div className="conversation-body">
+              {/* Message list goes here (mock data in next task) */}
+            </div>
+            <footer className="conversation-composer">
+              <form
+                className="composer-form"
+                onSubmit={(e) => e.preventDefault()}
+              >
+                <input
+                  type="text"
+                  className="composer-input"
+                  aria-label={`Message ${activeDm.author}`}
+                  placeholder={`Message ${activeDm.author}`}
+                />
+                <button type="submit" className="composer-send">
+                  Send
+                </button>
+              </form>
+            </footer>
+          </section>
+        ) : (
+          <div className="conversation-empty">
+            <h1>Select a message</h1>
+            <p>Choose a conversation from the left to start viewing it here.</p>
+          </div>
+        )}
       </aside>
     </div>
   )
