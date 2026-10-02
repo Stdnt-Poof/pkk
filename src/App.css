@@ -599,6 +599,10 @@
   overflow: hidden;
   background-color: orange;
 }
+.msg-img-container {
+  border-radius: 50%;
+  background-color: var(--bg-dark); /*DO NOT CHANGE! IGNORE*/
+}
 .conversation {
   display: flex;
   flex-direction: column;
@@ -633,13 +637,6 @@
   outline: 0;
   font-family: inherit;
 }
-.composer-send {
-  padding: 10px 18px;
-  border: 1px solid black;
-  border-radius: 50px;
-  cursor: pointer;
-  font: inherit;
-}
 .conversation-empty {
   margin: auto;
   padding: 24px;
@@ -648,8 +645,4 @@
 .conversation-empty h1 {
   margin: 0 0 8px;
   font-size: 1.25rem;
-}
-.conversation-empty p {
-  margin: 0;
-  font-size: 0.9rem;
 }

@@ -35,15 +35,14 @@ function Messagespage() {
       </main>
       <aside className="messages">
         {activeDm ? (
-          <section className="conversation" aria-label={`Conversation with ${activeDm.author}`}>
+          <section className="conversation">
             <header className='dm-header'>
               <div className='dm-info'>
                 <div className="dm-header-avatar" aria-hidden="true" />
                 <div className='dm-header-user'>{activeDm.author}</div>
               </div>
-            </header>
+            </header> 
             <div className="conversation-body">
-              {/* Message list goes here (mock data in next task) */}
             </div>
             <footer className="conversation-composer">
               <form
@@ -53,19 +52,16 @@ function Messagespage() {
                 <input
                   type="text"
                   className="composer-input"
-                  aria-label={`Message ${activeDm.author}`}
-                  placeholder={`Message ${activeDm.author}`}
+                  placeholder="Type a Message"
                 />
-                <button type="submit" className="composer-send">
-                  Send
-                </button>
               </form>
             </footer>
           </section>
         ) : (
           <div className="conversation-empty">
-            <h1>Select a message</h1>
-            <p>Choose a conversation from the left to start viewing it here.</p>
+            <div className='msg-img-container'>
+              <img className="no-drag" src="/msg.svg" alt="" />
+            </div>
           </div>
         )}
       </aside>

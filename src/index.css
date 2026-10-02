@@ -41,3 +41,7 @@ body {
 * {
     text-decoration: none;
 }
+img.no-drag {
+    -webkit-user-drag: none;
+    user-select: none;
+}
