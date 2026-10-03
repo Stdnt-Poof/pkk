@@ -7,7 +7,9 @@ function HomeShell() {
     <div className="app-shell">
       <Adminsidebar />
 
-      <Outlet />
+      <div className='outlet-wrapper'>
+        <Outlet />
+      </div>
     </div>
   )
 }

@@ -15,6 +15,7 @@
     --warning: hsl(52 19% 57%);
     --success: hsl(146 17% 59%);
     --info: hsl(217 28% 65%);
+    --profile-bg: hsla(187, 13%, 27%, 0.35);
 }
 body.light {
   --bg-dark: hsl(187 18% 89%);
@@ -33,12 +34,16 @@ body.light {
   --warning: hsl(52 23% 34%);
   --success: hsl(147 19% 36%);
   --info: hsl(217 22% 41%);
+  --profile-bg: hsla(187, 8%, 49%, 0.35);
 }
 body {
     margin: 0;
     box-sizing: border-box;
 }
 * {
+    scrollbar-color: rgb(62, 65, 68) rgb(22, 24, 28);
+    font-family: sans-serif;
+    box-sizing: border-box;
     text-decoration: none;
 }
 img.no-drag {

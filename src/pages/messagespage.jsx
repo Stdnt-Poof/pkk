@@ -1,5 +1,6 @@
 
 import { useState } from 'react'
+import msgbg from "../assets/msg.svg"
 
 const DUMMY_DM = Array.from({ length: 30 }, (_, i) => ({
   id: i + 1,
@@ -60,7 +61,7 @@ function Messagespage() {
         ) : (
           <div className="conversation-empty">
             <div className='msg-img-container'>
-              <img className="no-drag" src="/msg.svg" alt="" />
+              <img className="no-drag" src={msgbg} alt="" />
             </div>
           </div>
         )}
