@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import Loginlayout from '../components/loginlayout'
+import Authform from '../components/authform'
 
 const initialForm = {
   identifier: '',
@@ -33,20 +33,18 @@ function LoginPage() {
   }
 
   return (
-    <Loginlayout
-      head="Stardust Nexus"
-      footer={
-        <p>
-          Don't have an account? <Link to="/Signup">Create an account</Link>
-        </p>
-      }
-    >
-      <p className="form-kicker">Log In</p>
-      <h2>Welcome Back</h2>
+    <Authform 
+        head="Stardust Nexus"
+        footer={
+          <p>Dont Have an account? <Link to="/Signup">Create One!</Link></p>
+        }
+      >
+        <p className="form-kicker">Log In</p>
+        <h2>Welcome Back</h2>
 
-      <form className="login-form" onSubmit={handleSubmit}>
-        <div className="form-field">
-          <input
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="form-field">
+            <input
             id="login-identifier"
             name="identifier"
             type="text"
@@ -83,7 +81,7 @@ function LoginPage() {
           Continue
         </button>
       </form>
-    </Loginlayout>
+      </Authform>
   )
 }
 

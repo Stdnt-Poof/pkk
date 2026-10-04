@@ -1,10 +1,14 @@
 .layout-login {
   display: grid;
-  min-height: 95dvh;
-  justify-content: center;
+  height: 100dvh;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+/* .login {
+
+} */
 .login-form {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   margin-top: 8px;
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import Loginlayout from '../components/loginlayout'
+import Authform from '../components/authform'
 
 const initialForm = {
   email: '',
@@ -33,7 +33,7 @@ function SignupPage() {
   }
 
   return (
-    <Loginlayout
+    <Authform
       head="Stardust Nexus"
       footer={
         <p>
@@ -111,7 +111,7 @@ function SignupPage() {
           Continue
         </button>
       </form>
-    </Loginlayout>
+    </Authform>
   )
 }
 
