@@ -26,7 +26,7 @@ function Usersidebar() {
                 </NavLink>
                 <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Team">
                   <Icon name="team" />
-                  <span>Team</span>
+                  <span>Groups</span>
                 </NavLink>
                 <NavLink className={({ isActive }) => `sidebar-item${isActive ? ' isActive' : ''}`}
                     to="/Settings">

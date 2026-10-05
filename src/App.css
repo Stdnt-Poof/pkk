@@ -175,6 +175,10 @@
   height: 100dvh;
   overflow: hidden;
 }
+.group-page-layout {
+  height: 100dvh;
+  grid-template-columns: clamp(5rem, 5vw, 10rem) minmax(0, 1fr) ;
+}
 /* Left sidebar */
 .left-sidebar {
   border-right: 1px solid black;
@@ -411,74 +415,16 @@
   background: #ffffff;
   color: #000000;
 }
-
-.settings-menu {
-  border-right: 1px solid #000000;
-  padding: 16px 0;
-}
-
-.settings-heading {
-  margin: 0 0 24px;
-  padding: 0 20px;
-  font-size: 1.5rem;
-}
-
 .settings-navigation {
   display: flex;
   flex-direction: column;
 }
-
-.settings-nav-item {
-  min-height: 58px;
-  padding: 0 20px;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
+.setting-nav-item {
+  padding: 16px;
+  color: black;
 }
-
-.settings-nav-item.is-active {
-  border-right: 2px solid #000000;
-  font-weight: 600;
-}
-
-.settings-detail {
-  padding: 16px 20px;
-}
-
-.settings-detail h2 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.settings-description {
-  margin: 28px 0 24px;
-  line-height: 1.5;
-}
-
-.settings-option-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.settings-option {
-  padding: 18px 0;
-}
-
-.settings-option h3,
-.settings-option p {
-  margin: 0;
-}
-
-.settings-option h3 {
-  font-size: 1rem;
-}
-
-.settings-option p {
-  margin-top: 3px;
-  line-height: 1.4;
+.setting-nav-itemisActive {
+  border-right: 4px cyan solid;
 }
 /* Profile */
 .profile-page {
@@ -782,4 +728,18 @@
 .conversation-empty h1 {
   margin: 0 0 8px;
   font-size: 1.25rem;
+}
+/*Group Chats*/
+.channels {
+  background-color: red;
+}
+.channel {
+  width: calc(100% - 8px);
+  height: 64px;
+  margin: 8px 4px;
+  border-radius: 8px;
+  background-color: black;
+}
+.group-msg {
+  background-color: orange;
 }

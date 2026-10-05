@@ -1,8 +1,16 @@
-
+import tmp from "../assets/temp.jpg"
 
 function Teampage() {
     return (
-        <h1>Help</h1>
+        <div className="page-layout group-page-layout">
+            <div className="channels">
+                <div className="channel">
+                    <img src={tmp}></img>
+                </div>
+            </div>
+            <div className="group-msg">
+            </div>
+        </div>
     )
 }
 
