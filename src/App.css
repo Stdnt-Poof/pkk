@@ -423,9 +423,6 @@
   padding: 16px;
   color: black;
 }
-.setting-nav-itemisActive {
-  border-right: 4px cyan solid;
-}
 /* Profile */
 .profile-page {
   position: relative;
@@ -734,11 +731,17 @@
   background-color: red;
 }
 .channel {
-  width: calc(100% - 8px);
-  height: 64px;
-  margin: 8px 4px;
+  height: 74px;
+  margin: 4px;
   border-radius: 8px;
   background-color: black;
+  overflow: hidden;
+}
+.channel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .group-msg {
   background-color: orange;
