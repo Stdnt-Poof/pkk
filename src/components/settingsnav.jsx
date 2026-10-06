@@ -22,3 +22,5 @@ function SettingsNav() {
         </div>
     )
 }
+
+export default SettingsNav

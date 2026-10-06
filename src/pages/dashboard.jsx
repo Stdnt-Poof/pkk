@@ -1,10 +1,10 @@
 
 
+import AdminDashboard from './admin/AdminDashboard.jsx'
+
 function Dashboard() {
     return (
-        <div>
-            <h1>help</h1>
-        </div>
+        <AdminDashboard />
     )
 }
 

@@ -1,11 +1,13 @@
-
+import { Outlet } from "react-router-dom"
+import SettingsNav from "../components/settingsnav"
 
 function SettingsPage() {
-  // const [isActive, setisActive] = useState('Notifications')
 
   return (
     <div className="page-layout settings-page-layout">
-      
+      <SettingsNav />
+
+      <Outlet />
     </div>
   )
 }
