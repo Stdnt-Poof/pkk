@@ -5,9 +5,9 @@ import Homepage from './pages/homepage.jsx'
 import Loginpage from './pages/loginpage.jsx'
 import Profilepage from './pages/profilepage.jsx'
 import Teampage from './pages/teampage.jsx'
+import Dashboard from './pages/dashboard.jsx'
 import Messagespage from './pages/messagespage.jsx'
 import SignupPage from './pages/signuppage.jsx'
-import Dashboard from './pages/dashboard.jsx'
 import './App.css'
 
 function App() {
