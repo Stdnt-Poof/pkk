@@ -9,7 +9,7 @@ const initialForm = {
 
 function LoginPage() {
   const [form, setForm] = useState(initialForm)
-  const [error, setError] = useState('')
+  const canSubmit = form.identifier.trim() !== '' && form.password !== ''
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -22,19 +22,12 @@ function LoginPage() {
 
   function handleSubmit(event) {
     event.preventDefault()
-    setError('')
 
-    if (!form.identifier.trim() || !form.password) {
-      setError('Please enter your username/email and password.')
-      return
-    }
-
-    // Backend login will be connected here later.
+    // TODO: connect backend login here later.
   }
 
   return (
     <Authform 
-        head="Stardust Nexus"
         footer={
           <p>Dont Have an account? <Link to="/Signup">Create One!</Link></p>
         }
@@ -71,13 +64,7 @@ function LoginPage() {
           <label htmlFor="login-password">Password</label>
         </div>
 
-        {error && (
-          <p className="form-error" role="alert">
-            {error}
-          </p>
-        )}
-
-        <button className="login-submit" type="submit">
+        <button className="login-submit" type="submit" disabled={!canSubmit}>
           Continue
         </button>
       </form>

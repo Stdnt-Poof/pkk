@@ -11,7 +11,11 @@ const initialForm = {
 
 function SignupPage() {
   const [form, setForm] = useState(initialForm)
-  const [error, setError] = useState('')
+  const canSubmit =
+    form.email.trim() !== '' &&
+    form.username.trim() !== '' &&
+    form.password !== '' &&
+    form.confirmpassword !== ''
 
   function handleChange(event) {
     const { name, value } = event.target
@@ -24,17 +28,12 @@ function SignupPage() {
 
   function handleSubmit(event) {
     event.preventDefault()
-    setError('')
 
-    if (form.password !== form.confirmpassword) {
-      setError('Passwords do not match.')
-      return
-    }
+    // TODO: connect backend signup here later.
   }
 
   return (
     <Authform
-      head="Stardust Nexus"
       footer={
         <p>
           Already have an account? <Link to="/Login">Log in!</Link>
@@ -101,13 +100,7 @@ function SignupPage() {
           <label htmlFor="signup-confirm-password">Confirm Password</label>
         </div>
 
-        {error && (
-          <p className="form-error" role="alert">
-            {error}
-          </p>
-        )}
-
-        <button className="login-submit" type="submit">
+        <button className="login-submit" type="submit" disabled={!canSubmit}>
           Continue
         </button>
       </form>

@@ -1,5 +1,9 @@
 import { useState } from "react"
 import YourAcc from "../components/YourAcc"
+import Privacy from "../components/privacy"
+import Notif from "../components/notif"
+import Language from "../components/language"
+import Secure from "../components/secure"
 
 function SettingsPage() {
   const [idk, setIdk] = useState('YourAcc')
@@ -14,7 +18,7 @@ function SettingsPage() {
           <span>Your Account</span>
         </button>
         <button type="button" className={idk == 'Secure' ? 'setting-nav-item Active' : 'setting-nav-item'} onClick={() => setIdk('Secure')}>
-          <span>Security and account access</span>
+          <span>Account Security</span>
         </button>
         <button type="button" className={idk == 'Privacy' ? 'setting-nav-item Active' : 'setting-nav-item'} onClick={() => setIdk('Privacy')}>
           <span>Privacy and safety</span>
@@ -28,6 +32,10 @@ function SettingsPage() {
       </div>
 
        {idk == 'YourAcc' ? <YourAcc /> : null}
+       {idk == 'Privacy' ? <Privacy /> : null}
+       {idk == 'Secure' ? <Secure /> : null}
+       {idk == 'Notif' ? <Notif /> : null}
+       {idk == 'Language' ? <Language /> : null}
     </div>
   )
 }

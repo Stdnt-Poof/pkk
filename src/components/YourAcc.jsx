@@ -5,9 +5,11 @@ function YourAcc() {
         <div className="settings-navigation">
             <div className="settings-header">
                 <h2>Your Account</h2>
-                <p>Manage information about your account, change your password, or delete your account</p>
+                <p>Manage information about your account, change your email, or delete your account</p>
             </div>
             <NavLink className="setting-nav-item-acc" to="/temp">Account Info</NavLink>
+            <NavLink className="setting-nav-item-acc" to="/temp">Change Email</NavLink>
+            <NavLink className="setting-nav-item-acc" to="/temp">Delete Your Account</NavLink>
         </div>
     )
 }
