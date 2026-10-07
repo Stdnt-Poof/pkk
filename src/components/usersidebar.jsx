@@ -13,26 +13,26 @@ function Usersidebar() {
 
             <nav className="sidebar-navigation">
               <NavLink className={({ isActive })=> `sidebar-item${isActive ? ' isActive' : ''}`} to="/Home">
-                  <Icon name="home" />
-                  <span>Home</span>
-                </NavLink>
-                <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Profile">
-                  <Icon name="profile" />
-                  <span>Profile</span>
-                </NavLink>
-                <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Messages">
-                  <Icon name="messages" />
-                  <span>Messages</span>
-                </NavLink>
-                <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Team">
-                  <Icon name="team" />
-                  <span>Groups</span>
-                </NavLink>
-                <NavLink className={({ isActive }) => `sidebar-item${isActive ? ' isActive' : ''}`}
-                    to="/Settings">
-                  <Icon name="settings" />
-                  <span>Settings</span>
-                </NavLink>
+                <Icon name="home" />
+                <span>Home</span>
+              </NavLink>
+              <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Profile">
+                <Icon name="profile" />
+                <span>Profile</span>
+              </NavLink>
+              <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Messages">
+                <Icon name="messages" />
+                <span>Messages</span>
+              </NavLink>
+              <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Team">
+                <Icon name="team" />
+                <span>Groups</span>
+              </NavLink>
+              <NavLink className={({ isActive }) => `sidebar-item${isActive ? ' isActive' : ''}`}
+                  to="/Settings">
+                <Icon name="settings" />
+                <span>Settings</span>
+              </NavLink>
             </nav>
 
             <div className="sidebar-footer">

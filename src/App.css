@@ -168,6 +168,7 @@
   grid-template-columns: minmax(0, 1fr) clamp(16rem, 25vw, 20rem);
 }
 .settings-page-layout {
+  height: 100dvh;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .messages-page-layout {
@@ -411,17 +412,38 @@
   background: white;
 }
 /* Settings */
-.settings-page-layout {
-  background: #ffffff;
-  color: #000000;
-}
 .settings-navigation {
+  border-right: 1px gray solid;
   display: flex;
   flex-direction: column;
 }
+.settings-header {
+  margin-left: 15px;
+}
 .setting-nav-item {
+  border: none;
   padding: 16px;
+  font-size: 1rem;
   color: black;
+}
+.setting-nav-item-acc {
+  padding: 20px;
+  color: black;
+  font-size: 1rem;
+}
+.setting-nav-item:hover {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: rgba(121, 121, 121, 0.35);
+}
+.setting-nav-item-acc:hover {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: rgba(121, 121, 121, 0.35);
+}
+.setting-nav-item.Active {
+  border-right: 4px cyan solid;
+  background-color: rgba(121, 121, 121, 0.35);
 }
 /* Profile */
 .profile-page {
@@ -746,3 +768,4 @@
 .group-msg {
   background-color: orange;
 }
+/*Admin DashBoard */
