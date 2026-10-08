@@ -1,4 +1,5 @@
 :root {
+    color-scheme: dark;
     --bg-dark: hsl(189 54% 1%);
     --bg: hsl(187 33% 4%);
     --bg-light: hsl(187 18% 8%);
@@ -18,6 +19,7 @@
     --profile-bg: hsla(187, 13%, 27%, 0.35);
 }
 body.light {
+  color-scheme: light;
   --bg-dark: hsl(187 18% 89%);
   --bg: hsl(187 34% 94%);
   --bg-light: hsl(187 100% 99%);
@@ -26,8 +28,8 @@ body.light {
   --highlight: hsl(187 100% 98%);
   --border: hsl(187 8% 49%);
   --border-muted: hsl(187 10% 61%);
-  --primary: hsl(185 100% 10%);
-  --primary-light: hsl(185, 98%, 20%);
+  --primary: hsl(185, 100%, 14%);
+  --primary-light: hsl(185, 100%, 21%);
   --secondary: hsl(213, 68%, 32%);
   --secondary-light: hsl(213, 67%, 43%);
   --danger: hsl(9 21% 41%);
@@ -39,6 +41,8 @@ body.light {
 body {
     margin: 0;
     box-sizing: border-box;
+    background-color: var(--bg);
+    color: var(--text);
 }
 * {
     scrollbar-color: rgb(62, 65, 68) rgb(22, 24, 28);

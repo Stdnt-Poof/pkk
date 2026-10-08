@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 
 function Switch() {
-  const [isLight, setIsLight] = useState(() =>
-    document.body.classList.contains('light'),
-  )
+  const [isLight, setIsLight] = useState(() => {
+    const stored = localStorage.getItem('theme')
+    if (stored) return stored === 'light'
+    return document.body.classList.contains('light')
+  })
 
   useEffect(() => {
     document.body.classList.toggle('light', isLight)
+    localStorage.setItem('theme', isLight ? 'light' : 'dark')
   }, [isLight])
 
   return (

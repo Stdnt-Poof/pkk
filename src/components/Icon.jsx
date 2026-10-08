@@ -13,6 +13,8 @@ function Icon({name, size=24}) {
         width={size}
         height={size} 
         viewBox="0 0 600 600"
+        fill="currentColor"
+        aria-hidden="true"
         >
             <path d={paths[name]} />
         </svg>
