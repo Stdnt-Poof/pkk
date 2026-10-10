@@ -1082,3 +1082,241 @@
   display: flex;
   gap: 8px;
 }
+/* ---------- Profile rating ---------- */
+.rating-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.rating-glyphs {
+  display: inline-flex;
+  gap: 1px;
+  letter-spacing: 0;
+}
+.rating-glyphs .star {
+  color: var(--text-muted);
+  opacity: 0.45;
+}
+.rating-glyphs .star.is-filled {
+  color: var(--warning);
+  opacity: 1;
+}
+.rating-count {
+  color: hsl(187 12% 68%);
+}
+/* ---------- Portfolio list ---------- */
+.users-portfolio {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0 24px;
+}
+.pf-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pf-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-light);
+  border: 1px solid var(--border-muted);
+  border-radius: 12px;
+  padding: 12px;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.pf-row:hover {
+  border-color: var(--border);
+}
+.pf-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--bg);
+  border: 1px solid var(--border-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pf-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.pf-thumb-pdf {
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+.pf-row-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+.pf-row-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pf-row-sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.pf-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 2px 8px;
+  color: var(--primary-light);
+}
+.pf-row-open {
+  font-size: 1.4rem;
+  color: var(--text-muted);
+  padding: 0 4px;
+}
+/* ---------- Portfolio viewer (long strip) ---------- */
+.pf-viewer {
+  width: min(100%, 680px);
+}
+.pf-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 60dvh;
+  overflow-y: auto;
+  background: var(--bg);
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  padding: 12px;
+}
+.pf-strip-img {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+.pf-pdf {
+  width: 100%;
+  min-height: 55dvh;
+  border: none;
+  border-radius: 8px;
+  background: #fff;
+}
+.pf-external-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  padding: 12px;
+}
+.pf-external-url {
+  margin: 0;
+  font-size: 0.85rem;
+  word-break: break-all;
+  color: var(--info);
+}
+/* ---------- Portfolio add (X edit-profile style shell) ---------- */
+.profile-nav-add {
+  font-size: 1.4rem;
+  font-weight: 400;
+  user-select: none;
+}
+.pf-add-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 60;
+}
+.pf-add-dialog {
+  background: #000;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: min(100%, 600px);
+  max-height: 90dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.pf-add-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+.pf-add-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  flex: 1;
+}
+.pf-add-x {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 6px;
+}
+.pf-add-save {
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+.pf-add-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  overflow-y: auto;
+  background: #000;
+}
+.pf-add-body .job-field input {
+  background: transparent;
+  border: 1px solid var(--border);
+}
+.pf-add-thumbs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pf-add-thumbs img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border-muted);
+}
