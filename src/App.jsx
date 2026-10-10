@@ -4,7 +4,7 @@ import SettingsPage from './pages/settingspage.jsx'
 import Homepage from './pages/homepage.jsx'
 import Loginpage from './pages/loginpage.jsx'
 import Profilepage from './pages/profilepage.jsx'
-import Teampage from './pages/teampage.jsx'
+import Communitypage from './pages/communitypage.jsx'
 import Dashboard from './pages/dashboard.jsx'
 import Messagespage from './pages/messagespage.jsx'
 import SignupPage from './pages/signuppage.jsx'
@@ -24,9 +24,10 @@ function App() {
         <Route path="/Messages" element={<HomeShell />} >
           <Route index element={<Messagespage />} />
         </Route>
-        <Route path="/Team" element={<HomeShell />}>
-          <Route index element={<Teampage />} />
+        <Route path="/Community" element={<HomeShell />}>
+          <Route index element={<Communitypage />} />
         </Route>
+        <Route path="/Team" element={<Navigate to="/Community" replace />} />
         <Route path="/Dashboard" element={<HomeShell />}>
           <Route index element={<Dashboard />} />
         </Route>

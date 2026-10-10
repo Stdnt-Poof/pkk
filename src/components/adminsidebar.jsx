@@ -24,9 +24,9 @@ function Adminsidebar() {
                   <Icon name="messages" />
                   <span>Messages</span>
                 </NavLink>
-                <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Team">
-                  <Icon name="team" />
-                  <span>Groups</span>
+                <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Community">
+                  <Icon name="community" />
+                  <span>Community</span>
                 </NavLink>
                 <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Settings">
                   <Icon name="settings" />
