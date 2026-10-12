@@ -1,5 +1,6 @@
 import ProfileBackground from "../components/FeRenderBg"
 import ProfileNav from "../components/profilenav"
+import RatingStars from "../components/RatingStars"
 import bgtemp from "../assets/bgtemp.jpg"
 import temp from "../assets/temp.jpg"
 
@@ -29,7 +30,7 @@ function Profilepage() {
                         <div className="profile-stats">
                             <span className="profile-stat"><strong>0</strong> Following</span>
                             <span className="profile-stat"><strong>0</strong> Followers</span>
-                            <span className="profile-stat"><strong>0</strong> Designs</span>
+                            <RatingStars rating={4.8} reviews={12} />
                         </div>
                     </section>
                     <ProfileNav />
