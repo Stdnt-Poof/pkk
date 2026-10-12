@@ -72,7 +72,7 @@
   width: 100%;
   min-height: 43px;
   border: none;
-  color: var(--text);
+  color: #fff;
   border-radius: 10px;
   background-color: var(--secondary);
   margin-top: 5px;
@@ -240,7 +240,7 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background-color: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
 }
 .sidebar-navigation {
   display: flex;
@@ -525,11 +525,11 @@
   overflow-y: auto;
   min-height: 0;
   margin: 10px;
-  background-color: rgba(16, 12, 22, 0.88);
+  background-color: color-mix(in srgb, var(--bg-light) 88%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-radius: 8px;
-  color: hsl(187 61% 93%);
+  color: var(--text);
 }
 .profile-content {
   display: flex;
@@ -568,15 +568,16 @@
 .profile-handle {
   margin: 0;
   font-size: 0.9rem;
-  color: hsl(187 12% 68%);
+  color: var(--text-muted);
 }
 .profile-edit {
   margin-left: auto;
   align-self: center;
   padding: 8px 18px;
   border-radius: 6px;
-  background-color: hsl(187 18% 8%);
+  background-color: var(--bg-light);
   border: 1px solid var(--border);
+  color: var(--text);
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -584,7 +585,7 @@
   white-space: nowrap;
 }
 .profile-edit:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--highlight);
 }
 .profile-bio {
   margin-top: 20px;
@@ -601,10 +602,10 @@
   gap: 16px;
   margin-top: 12px;
   font-size: 0.9rem;
-  color: hsl(187 12% 68%);
+  color: var(--text-muted);
 }
 .profile-stat strong {
-  color: white;
+  color: var(--text);
   font-weight: 700;
 }
 .profile-navigation {
@@ -631,7 +632,7 @@
   padding: 16px 32px;
   text-align: center;
   cursor: pointer;
-  color: white;
+  color: var(--text);
 }
 .profile-nav-itemActive::after {
   content: "";
@@ -768,7 +769,7 @@
 }
 .msg-img-container {
   border-radius: 50%;
-  background-color: hsl(187 18% 8%);
+  background-color: var(--bg-light);
 }
 .conversation {
   display: flex;
@@ -876,9 +877,9 @@
   font-family: inherit;
 }
 .job-chip.is-active {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--bg-dark);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1c1207;
   font-weight: 700;
 }
 .job-select {
@@ -926,7 +927,7 @@
   color: var(--text-muted);
 }
 .job-budget {
-  color: var(--primary-light);
+  color: var(--accent-light);
   font-weight: 700;
 }
 .job-card-desc {
@@ -965,11 +966,13 @@
   text-align: center;
 }
 .job-btn-primary {
-  background: var(--secondary);
-  border-color: var(--secondary);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1c1207;
+  font-weight: 700;
 }
 .job-btn-primary:hover {
-  background: var(--secondary-light);
+  filter: brightness(1.1);
 }
 .job-btn-saved {
   border-color: var(--primary);
