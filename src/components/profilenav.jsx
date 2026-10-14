@@ -1,14 +1,33 @@
 import { useState } from "react"
+import PortfolioAddInline from "./portfolio/PortfolioAddInline"
 import PortfolioAddModal from "./portfolio/PortfolioAddModal"
 import PortfolioList from "./portfolio/PortfolioList"
 import PortfolioViewer from "./portfolio/PortfolioViewer"
+import { isValidExternalUrl } from "./portfolio/portfolioUtils"
 import { MOCK_PORTFOLIO } from "../data/mockPortfolio"
 
 function ProfileNav() {
     const [active, setActive] = useState('post')
-    const [items, setItems] = useState(MOCK_PORTFOLIO)
+    const [items] = useState(MOCK_PORTFOLIO)
     const [viewerItem, setViewerItem] = useState(null)
     const [showAdd, setShowAdd] = useState(false)
+    const [linkError, setLinkError] = useState("")
+
+    // Preview is CV-only. Portfolio rows open their link in a new tab.
+    function handleOpen(item) {
+        if (item.kind === "cv") {
+            setLinkError("")
+            setViewerItem(item)
+            return
+        }
+        if (!isValidExternalUrl(item.externalUrl)) {
+            setViewerItem(null)
+            setLinkError("This portfolio link is not a valid https domain.")
+            return
+        }
+        setLinkError("")
+        window.open(item.externalUrl, "_blank", "noopener,noreferrer")
+    }
 
     return (
         <>
@@ -26,7 +45,9 @@ function ProfileNav() {
                     <div>help</div>
                 </div> :
                 <div className="users-portfolio">
-                    <PortfolioList items={items} onOpen={setViewerItem} />
+                    <PortfolioAddInline />
+                    {linkError ? <p className="job-form-error">{linkError}</p> : null}
+                    <PortfolioList items={items} onOpen={handleOpen} />
                 </div>}
             </div>
 
@@ -34,14 +55,7 @@ function ProfileNav() {
                 <PortfolioViewer item={viewerItem} onClose={() => setViewerItem(null)} />
             ) : null}
             {showAdd ? (
-                <PortfolioAddModal
-                    onClose={() => setShowAdd(false)}
-                    onAdd={(item) => {
-                        setItems((prev) => [item, ...prev])
-                        setShowAdd(false)
-                        setActive('portfolio')
-                    }}
-                />
+                <PortfolioAddModal onClose={() => setShowAdd(false)} />
             ) : null}
         </>
     )

@@ -1,16 +1,10 @@
-import { useEffect, useMemo, useState } from "react"
-import {
-  downloadUrl,
-  ensurePdfFilename,
-  isValidExternalUrl,
-  makePlaceholderPdfBlob,
-} from "./portfolioUtils"
+import { useEffect, useMemo } from "react"
+import { downloadUrl, ensurePdfFilename, makePlaceholderPdfBlob } from "./portfolioUtils"
 
+// Preview is CV-only. Portfolio items never reach this viewer —
+// they open directly in a new browser tab from the list.
 function PortfolioViewer({ item, onClose }) {
-  const [linkError, setLinkError] = useState("")
-
   const cvObjectUrl = useMemo(() => {
-    if (item.kind !== "cv") return ""
     if (item.fileUrl) return item.fileUrl
     return URL.createObjectURL(makePlaceholderPdfBlob(item.title))
   }, [item])
@@ -29,24 +23,8 @@ function PortfolioViewer({ item, onClose }) {
     }
   }, [cvObjectUrl, item.fileUrl])
 
-  function handleOpenExternal() {
-    if (!isValidExternalUrl(item.externalUrl)) {
-      setLinkError("This link is not a valid https domain (localhost / http / relative links are blocked).")
-      return
-    }
-    window.open(item.externalUrl, "_blank", "noopener,noreferrer")
-  }
-
   function handleDownload() {
-    if (item.kind === "cv") {
-      downloadUrl(cvObjectUrl, ensurePdfFilename(item.fileName || item.title))
-      return
-    }
-    const first = item.images[0]
-    if (first) {
-      const name = `${item.title.replace(/[^\w\- ]+/g, "").trim() || "portfolio"}-slide-1.jpg`
-      downloadUrl(first, name)
-    }
+    downloadUrl(cvObjectUrl, ensurePdfFilename(item.fileName || item.title))
   }
 
   return (
@@ -67,33 +45,14 @@ function PortfolioViewer({ item, onClose }) {
 
         {item.description ? <p className="job-detail-desc">{item.description}</p> : null}
 
-        {item.openMode === "external" ? (
-          <div className="pf-external-box">
-            <p className="messages-placeholder">This item opens in a separate browser window.</p>
-            <p className="pf-external-url">{item.externalUrl || "(no link set)"}</p>
-            {linkError ? <p className="job-form-error">{linkError}</p> : null}
-            <button type="button" className="job-btn job-btn-primary" onClick={handleOpenExternal}>
-              Open link ↗
-            </button>
-          </div>
-        ) : item.kind === "cv" ? (
-          <div className="pf-strip">
-            <iframe className="pf-pdf" title={`${item.title} preview`} src={cvObjectUrl} />
-          </div>
-        ) : (
-          <div className="pf-strip" aria-label="Slides in a long strip">
-            {item.images.map((src, i) => (
-              <img key={i} className="pf-strip-img no-drag" src={src} alt={`${item.title} slide ${i + 1}`} />
-            ))}
-          </div>
-        )}
+        <div className="pf-strip">
+          <iframe className="pf-pdf" title={`${item.title} preview`} src={cvObjectUrl} />
+        </div>
 
         <div className="job-card-actions">
-          {item.openMode !== "external" ? (
-            <button type="button" className="job-btn job-btn-primary" onClick={handleDownload}>
-              {item.kind === "cv" ? "Download .pdf" : "Download"}
-            </button>
-          ) : null}
+          <button type="button" className="job-btn job-btn-primary" onClick={handleDownload}>
+            Download .pdf
+          </button>
         </div>
       </div>
     </div>
