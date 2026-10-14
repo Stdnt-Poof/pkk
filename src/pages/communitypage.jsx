@@ -7,6 +7,21 @@ import { MOCK_JOBS } from "../data/mockJobs"
 
 const STORAGE_KEY = "community-jobs-v1"
 
+/* ============================================================================
+   BACKEND NEEDED — FE-only mock, replace with real API (wrapped section START)
+   ----------------------------------------------------------------------------
+   Masked as FE here, needs a BE:
+   - GET    /api/jobs (?search=&category=&budget=) -> replaces MOCK_JOBS + localStorage
+   - POST   /api/jobs            -> replaces handlePost + localStorage write
+   - POST   /api/jobs/:id/save   -> replaces savedIds useState (per-user saved list)
+   - GET    /api/jobs/:id/comments
+   - POST   /api/jobs/:id/comments -> replaces handleComment local append
+   - POST   /api/jobs/:id/apply  -> replaces "Apply via DM" Link (should create/route a DM thread)
+   Everything marked BE-MOCK below is local-only and must be deleted once the
+   endpoints land (keep <JobCard /> / <JobDetail /> usage).
+   ============================================================================ */
+// --- BE-MOCK-START (localStorage jobs, session-only saves, local comments) ---
+
 function loadStoredJobs() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -33,6 +48,7 @@ function Communitypage() {
   const [budget, setBudget] = useState("all")
   const [showPost, setShowPost] = useState(false)
   const [activeJob, setActiveJob] = useState(null)
+  // --- BE-MOCK-END (everything above back to loadStoredJobs is local-only) ---
 
   const allJobs = useMemo(() => [...userJobs, ...MOCK_JOBS], [userJobs])
 
@@ -48,12 +64,14 @@ function Communitypage() {
   }, [allJobs, search, category, budget])
 
   function toggleSave(id) {
+    // BE-MOCK: replace with POST /api/jobs/:id/save (persist per user)
     setSavedIds((prev) =>
       prev.includes(id) ? prev.filter((saved) => saved !== id) : [...prev, id],
     )
   }
 
   function handlePost(data) {
+    // BE-MOCK: replace with POST /api/jobs then refetch/invalidate job list
     const job = {
       id: `user-${Date.now()}`,
       author: "You",
@@ -74,6 +92,7 @@ function Communitypage() {
   }
 
   function handleComment(jobId, text) {
+    // BE-MOCK: replace with POST /api/jobs/:id/comments then sync activeJob from server
     const addTo = (list) =>
       list.map((job) =>
         job.id === jobId

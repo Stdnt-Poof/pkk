@@ -72,7 +72,7 @@
   width: 100%;
   min-height: 43px;
   border: none;
-  color: var(--text);
+  color: #fff;
   border-radius: 10px;
   background-color: var(--secondary);
   margin-top: 5px;
@@ -240,7 +240,7 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background-color: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
 }
 .sidebar-navigation {
   display: flex;
@@ -525,11 +525,11 @@
   overflow-y: auto;
   min-height: 0;
   margin: 10px;
-  background-color: rgba(16, 12, 22, 0.88);
+  background-color: color-mix(in srgb, var(--bg-light) 88%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-radius: 8px;
-  color: hsl(187 61% 93%);
+  color: var(--text);
 }
 .profile-content {
   display: flex;
@@ -568,15 +568,16 @@
 .profile-handle {
   margin: 0;
   font-size: 0.9rem;
-  color: hsl(187 12% 68%);
+  color: var(--text-muted);
 }
 .profile-edit {
   margin-left: auto;
   align-self: center;
   padding: 8px 18px;
   border-radius: 6px;
-  background-color: hsl(187 18% 8%);
+  background-color: var(--bg-light);
   border: 1px solid var(--border);
+  color: var(--text);
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
@@ -584,7 +585,7 @@
   white-space: nowrap;
 }
 .profile-edit:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--highlight);
 }
 .profile-bio {
   margin-top: 20px;
@@ -601,10 +602,10 @@
   gap: 16px;
   margin-top: 12px;
   font-size: 0.9rem;
-  color: hsl(187 12% 68%);
+  color: var(--text-muted);
 }
 .profile-stat strong {
-  color: white;
+  color: var(--text);
   font-weight: 700;
 }
 .profile-navigation {
@@ -631,7 +632,7 @@
   padding: 16px 32px;
   text-align: center;
   cursor: pointer;
-  color: white;
+  color: var(--text);
 }
 .profile-nav-itemActive::after {
   content: "";
@@ -768,7 +769,7 @@
 }
 .msg-img-container {
   border-radius: 50%;
-  background-color: hsl(187 18% 8%);
+  background-color: var(--bg-light);
 }
 .conversation {
   display: flex;
@@ -876,9 +877,9 @@
   font-family: inherit;
 }
 .job-chip.is-active {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--bg-dark);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1c1207;
   font-weight: 700;
 }
 .job-select {
@@ -926,7 +927,7 @@
   color: var(--text-muted);
 }
 .job-budget {
-  color: var(--primary-light);
+  color: var(--accent-light);
   font-weight: 700;
 }
 .job-card-desc {
@@ -965,11 +966,13 @@
   text-align: center;
 }
 .job-btn-primary {
-  background: var(--secondary);
-  border-color: var(--secondary);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1c1207;
+  font-weight: 700;
 }
 .job-btn-primary:hover {
-  background: var(--secondary-light);
+  filter: brightness(1.1);
 }
 .job-btn-saved {
   border-color: var(--primary);
@@ -1325,4 +1328,193 @@
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid var(--border-muted);
+}
+/* ---------- Home posts ---------- */
+.post-composer {
+  display: flex;
+  gap: 12px;
+  margin: 0 20px;
+  padding: 16px;
+  background: var(--bg-light);
+  border: 1px solid var(--border-muted);
+  border-radius: 12px;
+}
+.post-composer-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+.post-composer-input {
+  border-radius: 12px;
+}
+.post-composer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.post-composer-count {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.post-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.post-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.post-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  background-color: var(--highlight);
+  color: var(--text);
+}
+.post-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.post-identity h3 {
+  margin: 0;
+}
+.post-text {
+  white-space: pre-wrap;
+}
+.post-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.post-icon-btn {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+}
+.post-icon-btn:hover {
+  border-color: var(--border);
+  color: var(--text);
+}
+.post-icon-btn.is-saved {
+  color: var(--warning);
+}
+.post-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--border-muted);
+}
+.post-actions-left,
+.post-actions-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+.post-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 8px;
+  min-width: 0;
+  line-height: 1;
+}
+.post-action:hover {
+  background-color: var(--highlight);
+  color: var(--text);
+}
+.post-action.is-liked {
+  color: var(--danger);
+}
+.post-views {
+  cursor: default;
+}
+.post-views:hover {
+  background: transparent;
+  color: var(--text-muted);
+}
+.post-comments {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--border-muted);
+  padding-top: 12px;
+}
+.post-comment-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.post-comment {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.86rem;
+}
+.post-comment-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.post-comment-meta {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.78rem;
+}
+.post-comment-like {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+}
+.post-comment-like.is-liked {
+  color: var(--danger);
+}
+.post-comment-form {
+  display: flex;
+  gap: 8px;
 }
