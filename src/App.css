@@ -823,7 +823,7 @@
 }
 /*Community*/
 .community-page-layout {
-  grid-template-columns: minmax(0, 1fr) clamp(16rem, 25vw, 20rem);
+  grid-template-columns: minmax(0, 1fr);
 }
 .community-header h1 {
   margin: 0 0 4px;

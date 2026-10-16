@@ -3,7 +3,7 @@ import JobCard from "../components/community/JobCard"
 import JobDetail from "../components/community/JobDetail"
 import JobFilterBar from "../components/community/JobFilterBar"
 import PostJobModal from "../components/community/PostJobModal"
-import { MOCK_JOBS } from "../data/mockJobs"
+import { MOCK_JOBS, toUsd } from "../data/mockJobs"
 
 const STORAGE_KEY = "community-jobs-v1"
 
@@ -27,16 +27,19 @@ function loadStoredJobs() {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return []
     const parsed = JSON.parse(raw)
-    return Array.isArray(parsed) ? parsed : []
+    if (!Array.isArray(parsed)) return []
+    // Backfill jobs saved before currency existed.
+    return parsed.map((job) => ({ currency: "USD", ...job }))
   } catch {
     return []
   }
 }
 
 function matchesBudget(job, budget) {
-  if (budget === "under100") return job.budget < 100
-  if (budget === "100-500") return job.budget >= 100 && job.budget <= 500
-  if (budget === "500plus") return job.budget > 500
+  const usd = toUsd(job)
+  if (budget === "under100") return usd < 100
+  if (budget === "100-500") return usd >= 100 && usd <= 500
+  if (budget === "500plus") return usd > 500
   return true
 }
 
@@ -46,6 +49,7 @@ function Communitypage() {
   const [search, setSearch] = useState("")
   const [category, setCategory] = useState("All")
   const [budget, setBudget] = useState("all")
+  const [currency, setCurrency] = useState("USD")
   const [showPost, setShowPost] = useState(false)
   const [activeJob, setActiveJob] = useState(null)
   // --- BE-MOCK-END (everything above back to loadStoredJobs is local-only) ---
@@ -55,13 +59,14 @@ function Communitypage() {
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
     return allJobs.filter((job) => {
+      if ((job.currency || "USD") !== currency) return false
       if (category !== "All" && job.category !== category) return false
       if (!matchesBudget(job, budget)) return false
       if (!q) return true
       const hay = `${job.title} ${job.description} ${job.skills.join(" ")} ${job.author}`.toLowerCase()
       return hay.includes(q)
     })
-  }, [allJobs, search, category, budget])
+  }, [allJobs, search, category, budget, currency])
 
   function toggleSave(id) {
     // BE-MOCK: replace with POST /api/jobs/:id/save (persist per user)
@@ -122,10 +127,6 @@ function Communitypage() {
         <header className="feed-header community-header">
           <div>
             <h1>Community Jobs</h1>
-            <p className="messages-placeholder">
-              Job offers from people looking for freelancers. Open one for details, reply in
-              discussion, or apply via DM.
-            </p>
           </div>
         </header>
 
@@ -137,6 +138,8 @@ function Communitypage() {
             onCategory={setCategory}
             budget={budget}
             onBudget={setBudget}
+            currency={currency}
+            onCurrency={setCurrency}
             onPost={() => setShowPost(true)}
           />
 
@@ -157,23 +160,6 @@ function Communitypage() {
           </section>
         </div>
       </main>
-
-      <aside className="right-sidebar">
-        <section className="messages-panel">
-          <h2>How it works</h2>
-          <p className="messages-placeholder">1. Browse job offers below.</p>
-          <p className="messages-placeholder">2. Open a card for scope + discussion.</p>
-          <p className="messages-placeholder">3. Apply via DM to contact the poster.</p>
-        </section>
-        <section className="messages-panel">
-          <h2>Saved ({savedIds.length})</h2>
-          <p className="messages-placeholder">
-            {savedIds.length === 0
-              ? "Tap Save on any job to shortlist it."
-              : "Shortlisted jobs stay marked during this session."}
-          </p>
-        </section>
-      </aside>
 
       {showPost ? (
         <PostJobModal onClose={() => setShowPost(false)} onSubmit={handlePost} />

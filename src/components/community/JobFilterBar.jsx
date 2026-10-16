@@ -1,4 +1,4 @@
-import { BUDGET_FILTERS, JOB_CATEGORIES } from "../../data/mockJobs"
+import { CURRENCIES, getBudgetFilters, JOB_CATEGORIES } from "../../data/mockJobs"
 
 function JobFilterBar({
   search,
@@ -7,8 +7,11 @@ function JobFilterBar({
   onCategory,
   budget,
   onBudget,
+  currency,
+  onCurrency,
   onPost,
 }) {
+  const budgetFilters = getBudgetFilters(currency)
   return (
     <div className="job-filterbar">
       <div className="job-filterbar-top">
@@ -43,9 +46,21 @@ function JobFilterBar({
           value={budget}
           onChange={(e) => onBudget(e.target.value)}
         >
-          {BUDGET_FILTERS.map((b) => (
+          {budgetFilters.map((b) => (
             <option key={b.id} value={b.id}>
               {b.label}
+            </option>
+          ))}
+        </select>
+        <select
+          className="job-select"
+          aria-label="Currency filter"
+          value={currency}
+          onChange={(e) => onCurrency(e.target.value)}
+        >
+          {CURRENCIES.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.label}
             </option>
           ))}
         </select>

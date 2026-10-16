@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { formatBudget } from "../../data/mockJobs"
 
 function JobCard({ job, isSaved, onOpen, onToggleSave }) {
   return (
@@ -7,7 +8,7 @@ function JobCard({ job, isSaved, onOpen, onToggleSave }) {
         <h3 className="job-card-title">{job.title}</h3>
         <p className="job-card-meta">
           <span className="job-budget">
-            ${job.budget} {job.budgetType}
+            {formatBudget(job.budget, job.currency)} {job.budgetType}
           </span>
           <span aria-hidden="true"> · </span>
           <span>{job.category}</span>

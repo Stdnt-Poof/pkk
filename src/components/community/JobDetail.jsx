@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import { formatBudget } from "../../data/mockJobs"
 
 function JobDetail({ job, isSaved, onClose, onToggleSave, onAddComment }) {
   const [comment, setComment] = useState("")
@@ -30,7 +31,7 @@ function JobDetail({ job, isSaved, onClose, onToggleSave, onAddComment }) {
 
         <p className="job-card-meta">
           <span className="job-budget">
-            ${job.budget} {job.budgetType}
+            {formatBudget(job.budget, job.currency)} {job.budgetType}
           </span>
           <span aria-hidden="true"> · </span>
           <span>{job.category}</span>

@@ -1,10 +1,11 @@
 import { useState } from "react"
-import { JOB_CATEGORIES } from "../../data/mockJobs"
+import { CURRENCIES, JOB_CATEGORIES } from "../../data/mockJobs"
 
 const emptyForm = {
   title: "",
   description: "",
   budget: "",
+  currency: "USD",
   budgetType: "Fixed",
   category: "UI Design",
   skills: "",
@@ -33,6 +34,7 @@ function PostJobModal({ onClose, onSubmit }) {
       title: form.title.trim(),
       description: form.description.trim(),
       budget,
+      currency: form.currency,
       budgetType: form.budgetType,
       category: form.category,
       skills: form.skills
@@ -79,14 +81,24 @@ function PostJobModal({ onClose, onSubmit }) {
           </label>
           <div className="job-form-row">
             <label className="job-field">
-              <span>Budget (USD)</span>
+              <span>Budget ({form.currency})</span>
               <input
                 type="number"
                 min="1"
                 value={form.budget}
                 onChange={(e) => set("budget", e.target.value)}
-                placeholder="150"
+                placeholder={form.currency === "IDR" ? "1500000" : "150"}
               />
+            </label>
+            <label className="job-field">
+              <span>Currency</span>
+              <select value={form.currency} onChange={(e) => set("currency", e.target.value)}>
+                {CURRENCIES.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
             </label>
             <label className="job-field">
               <span>Type</span>
@@ -95,8 +107,6 @@ function PostJobModal({ onClose, onSubmit }) {
                 <option value="Hourly">Hourly</option>
               </select>
             </label>
-          </div>
-          <div className="job-form-row">
             <label className="job-field">
               <span>Category</span>
               <select value={form.category} onChange={(e) => set("category", e.target.value)}>
@@ -107,15 +117,15 @@ function PostJobModal({ onClose, onSubmit }) {
                 ))}
               </select>
             </label>
-            <label className="job-field">
-              <span>Skills (comma separated)</span>
-              <input
-                value={form.skills}
-                onChange={(e) => set("skills", e.target.value)}
-                placeholder="Figma, Logo, Branding"
-              />
-            </label>
           </div>
+          <label className="job-field">
+            <span>Skills (comma separated)</span>
+            <input
+              value={form.skills}
+              onChange={(e) => set("skills", e.target.value)}
+              placeholder="Figma, Logo, Branding"
+            />
+          </label>
           {error ? <p className="job-form-error">{error}</p> : null}
           <button type="submit" className="job-btn job-btn-primary job-form-submit">
             Publish job
