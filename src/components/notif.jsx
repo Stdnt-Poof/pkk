@@ -1,15 +1,15 @@
-import { NavLink } from "react-router-dom";
+import SettingsSection from "./settings/SettingsSection"
 
 function Notif() {
-    return (
-        <div className="settings-navigation">
-            <div className="settings-header">
-                <h2>Notification</h2>
-                <p>Manage the Notifications you recive</p>
-            </div>
-            <NavLink className="setting-nav-item-acc" to="/temp">Mute Notification</NavLink>
-        </div>
-    )
+  return (
+    <SettingsSection
+      title="Notification"
+      subtitle="Manage the notifications you receive"
+      links={[
+        { to: "/Settings/Notifications/Mute", label: "Mute Notification" },
+      ]}
+    />
+  )
 }
 
 export default Notif

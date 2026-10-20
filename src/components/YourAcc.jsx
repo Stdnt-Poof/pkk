@@ -1,17 +1,17 @@
-import { NavLink } from "react-router-dom";
+import SettingsSection from "./settings/SettingsSection"
 
 function YourAcc() {
-    return (
-        <div className="settings-navigation">
-            <div className="settings-header">
-                <h2>Your Account</h2>
-                <p>Manage information about your account, change your email, or delete your account</p>
-            </div>
-            <NavLink className="setting-nav-item-acc" to="/temp">Account Info</NavLink>
-            <NavLink className="setting-nav-item-acc" to="/temp">Change Email</NavLink>
-            <NavLink className="setting-nav-item-acc" to="/temp">Delete Your Account</NavLink>
-        </div>
-    )
+  return (
+    <SettingsSection
+      title="Your Account"
+      subtitle="Manage information about your account, change your email, or delete your account"
+      links={[
+        { to: "/Settings/YourAccount/Info", label: "Account Info" },
+        { to: "/Settings/YourAccount/Email", label: "Change Email" },
+        { to: "/Settings/YourAccount/Delete", label: "Delete Your Account" },
+      ]}
+    />
+  )
 }
 
 export default YourAcc

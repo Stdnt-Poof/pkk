@@ -1,46 +1,53 @@
+/* ============================================================
+   Palette — freelance marketplace, minimalist-professional
+   - primary: trust blue (identity, active states, links)
+   - secondary: green (CTAs / money actions, Upwork-style)
+   - accent: quiet gold (money highlights only)
+   - neutrals: never full black/white, soft navy-gray family
+   ============================================================ */
 :root {
     color-scheme: dark;
-    --bg-dark: hsl(222 35% 3%);
-    --bg: hsl(222 28% 6%);
-    --bg-light: hsl(222 22% 11%);
-    --text: hsl(220 25% 93%);
-    --text-muted: hsl(220 12% 68%);
-    --highlight: hsl(222 20% 20%);
-    --border: hsl(220 14% 26%);
-    --border-muted: hsl(222 20% 16%);
-    --primary: hsl(214 90% 62%);
-    --primary-light: hsl(214, 95%, 74%);
-    --secondary: hsl(214, 55%, 38%);
-    --secondary-light: hsl(214, 60%, 55%);
-    --accent: hsl(32 95% 58%);
-    --accent-light: hsl(32, 100%, 68%);
-    --danger: hsl(8 65% 65%);
-    --warning: hsl(48 90% 60%);
-    --success: hsl(152 60% 55%);
-    --info: hsl(214 80% 68%);
-    --profile-bg: hsla(214, 40%, 35%, 0.35);
+    --bg-dark: hsl(222 22% 7%);
+    --bg: hsl(222 18% 10%);
+    --bg-light: hsl(222 16% 14%);
+    --highlight: hsl(222 14% 20%);
+    --text: hsl(220 14% 91%);
+    --text-muted: hsl(220 10% 66%);
+    --border: hsl(220 12% 26%);
+    --border-muted: hsl(222 12% 18%);
+    --primary: hsl(214 90% 55%);
+    --primary-light: hsl(214 95% 72%);
+    --secondary: hsl(148 65% 47%);
+    --secondary-light: hsl(148 60% 58%);
+    --accent: hsl(38 85% 58%);
+    --accent-light: hsl(38 90% 68%);
+    --danger: hsl(8 70% 62%);
+    --warning: hsl(42 85% 58%);
+    --success: hsl(152 55% 52%);
+    --info: hsl(214 80% 66%);
+    --profile-bg: hsla(214, 60%, 50%, 0.20);
 }
 body.light {
   color-scheme: light;
-  --bg-dark: hsl(220 18% 88%);
-  --bg: hsl(220 30% 95%);
-  --bg-light: hsl(0 0% 100%);
-  --text: hsl(222 40% 9%);
-  --text-muted: hsl(220 12% 36%);
-  --highlight: hsl(220 40% 94%);
-  --border: hsl(220 14% 60%);
-  --border-muted: hsl(220 15% 80%);
-  --primary: hsl(214, 85%, 45%);
-  --primary-light: hsl(214, 80%, 35%);
-  --secondary: hsl(214, 65%, 38%);
-  --secondary-light: hsl(214, 65%, 48%);
-  --accent: hsl(32 90% 48%);
-  --accent-light: hsl(32, 85%, 36%);
-  --danger: hsl(8 65% 45%);
-  --warning: hsl(45 85% 38%);
-  --success: hsl(152 55% 32%);
-  --info: hsl(214 70% 42%);
-  --profile-bg: hsla(214, 30%, 45%, 0.18);
+  --bg-dark: hsl(220 20% 93%);
+  --bg: hsl(210 20% 96%);
+  --bg-light: hsl(210 25% 98%);
+  --highlight: hsl(210 25% 93%);
+  --text: hsl(220 10% 18%);
+  --text-muted: hsl(220 8% 45%);
+  --border: hsl(220 10% 80%);
+  --border-muted: hsl(220 14% 86%);
+  --primary: hsl(214 90% 42%);
+  --primary-light: hsl(214 85% 34%);
+  --secondary: hsl(148 60% 34%);
+  --secondary-light: hsl(148 55% 40%);
+  --accent: hsl(35 70% 34%);
+  --accent-light: hsl(33 65% 27%);
+  --danger: hsl(8 65% 38%);
+  --warning: hsl(40 85% 32%);
+  --success: hsl(152 55% 29%);
+  --info: hsl(214 75% 38%);
+  --profile-bg: hsla(214, 60%, 45%, 0.10);
 }
 body {
     margin: 0;

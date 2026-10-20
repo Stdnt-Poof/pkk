@@ -1,18 +1,17 @@
-import { NavLink } from "react-router-dom";
+import SettingsSection from "./settings/SettingsSection"
 
 function Privacy() {
-    return (
-        <div className="settings-navigation">
-            <div className="settings-header">
-                <h2>Privacy and Safety</h2>
-                <p>Manage Accounts Privacy, Content that you see, or What people can view your post and Profile</p>
-            </div>
-            <NavLink className="setting-nav-item-acc" to="/temp">Who can see your profile</NavLink>
-            <NavLink className="setting-nav-item-acc" to="/temp">Your Post</NavLink>
-            <NavLink className="setting-nav-item-acc" to="/temp">Chats</NavLink>
-            <NavLink className="setting-nav-item-acc" to="/temp">Content you see</NavLink>
-        </div>
-    )
+  return (
+    <SettingsSection
+      title="Privacy and Safety"
+      subtitle="Manage your account's privacy, and what people can see on your profile and posts"
+      links={[
+        { to: "/Settings/Privacy/Profile", label: "Who can see your profile" },
+        { to: "/Settings/Privacy/Posts", label: "Your Posts" },
+        { to: "/Settings/Privacy/Chats", label: "Chats" },
+      ]}
+    />
+  )
 }
 
 export default Privacy

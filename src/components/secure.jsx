@@ -1,16 +1,16 @@
-import { NavLink } from "react-router-dom";
+import SettingsSection from "./settings/SettingsSection"
 
 function Secure() {
-    return (
-        <div className="settings-navigation">
-            <div className="settings-header">
-                <h2>Account Security</h2>
-                <p>Manage your accounts security</p>
-            </div>
-            <NavLink className="setting-nav-item-acc" to="/temp">Manage Passkey</NavLink>
-            <NavLink className="setting-nav-item-acc" to="/temp">Change Password</NavLink>
-        </div>
-    )
+  return (
+    <SettingsSection
+      title="Account Security"
+      subtitle="Manage your account's security"
+      links={[
+        { to: "/Settings/Security/Passkey", label: "Manage Passkey" },
+        { to: "/Settings/Security/Password", label: "Change Password" },
+      ]}
+    />
+  )
 }
 
 export default Secure
