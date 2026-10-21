@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Authform from '../components/authform'
+import { useAuth } from '../lib/auth'
 
 const initialForm = {
   email: '',
@@ -11,6 +12,10 @@ const initialForm = {
 
 function SignupPage() {
   const [form, setForm] = useState(initialForm)
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const { register } = useAuth()
+  const navigate = useNavigate()
   const canSubmit =
     form.email.trim() !== '' &&
     form.username.trim() !== '' &&
@@ -26,10 +31,25 @@ function SignupPage() {
     }))
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
-    // TODO: connect backend signup here later.
+    setError('')
+    setSubmitting(true)
+
+    try {
+      await register({
+        email: form.email.trim(),
+        username: form.username.trim(),
+        password: form.password,
+        confirmpassword: form.confirmpassword,
+      })
+      navigate('/Home', { replace: true })
+    } catch (requestError) {
+      setError(requestError.message)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -100,8 +120,10 @@ function SignupPage() {
           <label htmlFor="signup-confirm-password">Confirm Password</label>
         </div>
 
-        <button className="login-submit" type="submit" disabled={!canSubmit}>
-          Continue
+        {error ? <p className="job-form-error">{error}</p> : null}
+
+        <button className="login-submit" type="submit" disabled={!canSubmit || submitting}>
+          {submitting ? 'Creating…' : 'Continue'}
         </button>
       </form>
     </Authform>

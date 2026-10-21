@@ -1,8 +1,10 @@
 import { NavLink, Link } from "react-router-dom"
 import Icon from "./Icon"
 import Switch from "./switch"
+import { useAuth } from "../lib/auth"
 
 function Usersidebar() {
+    const { logout } = useAuth()
     return (
         <>
         <aside className="left-sidebar" idkname>
@@ -41,7 +43,7 @@ function Usersidebar() {
               </span>
               <hr />
               <span className='sidebar-footer-item'>
-                  <p><Link to="/Login">Log Out!</Link></p>
+                  <p><Link to="/Login" onClick={() => { void logout() }}>Log Out!</Link></p>
               </span>
             </div>
           </aside>

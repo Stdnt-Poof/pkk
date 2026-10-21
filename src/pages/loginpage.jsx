@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Authform from '../components/authform'
+import { useAuth } from '../lib/auth'
 
 const initialForm = {
   identifier: '',
@@ -9,6 +10,10 @@ const initialForm = {
 
 function LoginPage() {
   const [form, setForm] = useState(initialForm)
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const { login } = useAuth()
+  const navigate = useNavigate()
   const canSubmit = form.identifier.trim() !== '' && form.password !== ''
 
   function handleChange(event) {
@@ -20,14 +25,24 @@ function LoginPage() {
     }))
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
-    // TODO: connect backend login here later.
+    setError('')
+    setSubmitting(true)
+
+    try {
+      await login(form.identifier.trim(), form.password)
+      navigate('/Home', { replace: true })
+    } catch (requestError) {
+      setError(requestError.message)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
-    <Authform 
+    <Authform
         footer={
           <p>Dont Have an account? <Link to="/Signup">Create One!</Link></p>
         }
@@ -64,8 +79,10 @@ function LoginPage() {
           <label htmlFor="login-password">Password</label>
         </div>
 
-        <button className="login-submit" type="submit" disabled={!canSubmit}>
-          Continue
+        {error ? <p className="job-form-error">{error}</p> : null}
+
+        <button className="login-submit" type="submit" disabled={!canSubmit || submitting}>
+          {submitting ? 'Checking…' : 'Continue'}
         </button>
       </form>
       </Authform>

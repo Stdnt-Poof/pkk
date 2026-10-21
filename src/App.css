@@ -1962,3 +1962,13 @@
   margin: 8px 0 0;
   font-size: 0.95rem;
 }
+
+/* Shown while the stored token is being verified against /api/auth/me. */
+.route-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
