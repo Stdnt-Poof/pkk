@@ -1,27 +1,81 @@
+import { useEffect, useState } from "react"
 import SettingsSub from "../../components/settings/SettingsSub"
+import api from "../../lib/api"
+import { useAuth } from "../../lib/auth"
 
-/* BACKEND NEEDED: GET /api/users/me — values below are mock placeholders. */
+/* Account details for the logged in user — first paint comes from the session
+   (already fetched by AuthProvider), then GET /api/users/me refreshes the
+   values the server actually holds. */
 
-const ROWS = [
-  { label: "Name", value: "Shlofte" },
-  { label: "Username", value: "@shlofte" },
-  { label: "Email", value: "shlofte@mail.com" },
-  { label: "Joined", value: "November 2025" },
-]
+function formatJoined(createdAt) {
+  if (!createdAt) return "—"
+
+  const date = new Date(createdAt)
+
+  if (Number.isNaN(date.getTime())) return "—"
+
+  return date.toLocaleDateString("en-US", { month: "long", year: "numeric" })
+}
+
+function roleLabel(role) {
+  return role === "admin" ? "Administrator" : "Member"
+}
 
 function AccInfo() {
+  const { user } = useAuth()
+  const [account, setAccount] = useState(user)
+  const [error, setError] = useState("")
+
+  useEffect(() => {
+    let active = true
+
+    api("/users/me")
+      .then((payload) => {
+        if (active) {
+          setAccount(payload.data)
+          setError("")
+        }
+      })
+      .catch((requestError) => {
+        if (active) {
+          setError(requestError.message)
+        }
+      })
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  if (!account) {
+    return (
+      <SettingsSub backTo="/Settings/YourAccount" backLabel="Your Account" title="Account Info">
+        <p className={error ? "job-form-error" : "settings-note"}>
+          {error || "Loading your account…"}
+        </p>
+      </SettingsSub>
+    )
+  }
+
+  const rows = [
+    { label: "Username", value: `@${account.username}` },
+    { label: "Email", value: account.email },
+    { label: "Role", value: roleLabel(account.role) },
+    { label: "Joined", value: formatJoined(account.created_at) },
+  ]
+
   return (
     <SettingsSub backTo="/Settings/YourAccount" backLabel="Your Account" title="Account Info">
       <p className="settings-note">Your account details. Edit them on your profile page.</p>
       <ul className="settings-rows">
-        {ROWS.map((row) => (
+        {rows.map((row) => (
           <li key={row.label}>
             <span className="settings-row-label">{row.label}</span>
             <span>{row.value}</span>
           </li>
         ))}
       </ul>
-      <p className="settings-note">Mock data — these fields will come from the backend.</p>
+      {error ? <p className="job-form-error">{error}</p> : null}
     </SettingsSub>
   )
 }
