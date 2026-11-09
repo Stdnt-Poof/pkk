@@ -1,7 +1,6 @@
 import { useState } from "react"
 import SettingsSub from "../../components/settings/SettingsSub"
-
-/* BACKEND NEEDED: PATCH /api/users/me/settings/profileVisibility — mock only. */
+import { useSettings } from "../../lib/settings"
 
 const OPTIONS = [
   { id: "everyone", label: "Everyone" },
@@ -10,7 +9,13 @@ const OPTIONS = [
 ]
 
 function ProfileVisibility() {
-  const [vis, setVis] = useState("everyone")
+  const { settings, error, save } = useSettings()
+  const [vis, setVis] = useState(() => settings.profile_visibility ?? "everyone")
+
+  function pick(value) {
+    setVis(value)
+    save({ profile_visibility: value })
+  }
 
   return (
     <SettingsSub backTo="/Settings/Privacy" backLabel="Privacy and Safety" title="Who can see your profile">
@@ -21,13 +26,13 @@ function ProfileVisibility() {
               type="radio"
               name="profile-visibility"
               checked={vis === option.id}
-              onChange={() => setVis(option.id)}
+              onChange={() => pick(option.id)}
             />
             <span>{option.label}</span>
           </label>
         ))}
       </div>
-      <p className="settings-note">Default: Everyone (public, like X/Twitter). Mock — not saved.</p>
+      {error ? <p className="job-form-error">{error}</p> : null}
     </SettingsSub>
   )
 }

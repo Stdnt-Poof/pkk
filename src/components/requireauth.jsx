@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../lib/auth'
+import { SkeletonShell } from './skeleton'
 
 /**
  * Guards every route nested under it: guests are sent back to the login page,
@@ -9,7 +10,7 @@ function RequireAuth({ adminOnly = false }) {
   const { user, loading, isAdmin } = useAuth()
 
   if (loading) {
-    return <div className="route-loading">Loading your account…</div>
+    return <SkeletonShell />
   }
 
   if (!user) {

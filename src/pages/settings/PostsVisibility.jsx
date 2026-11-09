@@ -1,7 +1,6 @@
 import { useState } from "react"
 import SettingsSub from "../../components/settings/SettingsSub"
-
-/* BACKEND NEEDED: PATCH /api/users/me/settings/postsVisibility — mock only. */
+import { useSettings } from "../../lib/settings"
 
 const OPTIONS = [
   { id: "everyone", label: "Everyone" },
@@ -10,7 +9,13 @@ const OPTIONS = [
 ]
 
 function PostsVisibility() {
-  const [vis, setVis] = useState("everyone")
+  const { settings, error, save } = useSettings()
+  const [vis, setVis] = useState(() => settings.posts_visibility ?? "everyone")
+
+  function pick(value) {
+    setVis(value)
+    save({ posts_visibility: value })
+  }
 
   return (
     <SettingsSub backTo="/Settings/Privacy" backLabel="Privacy and Safety" title="Your Posts">
@@ -21,13 +26,13 @@ function PostsVisibility() {
               type="radio"
               name="your-posts-visibility"
               checked={vis === option.id}
-              onChange={() => setVis(option.id)}
+              onChange={() => pick(option.id)}
             />
             <span>{option.label}</span>
           </label>
         ))}
       </div>
-      <p className="settings-note">Default: Everyone. Your post is visible where it is shared. Mock — not saved.</p>
+      {error ? <p className="job-form-error">{error}</p> : null}
     </SettingsSub>
   )
 }

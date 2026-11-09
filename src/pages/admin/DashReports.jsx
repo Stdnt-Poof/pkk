@@ -1,9 +1,14 @@
-import { useState } from "react"
-import { MOCK_REPORTS } from "../../data/mockReports"
+import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
+import api from "../../lib/api"
+import { timeAgo } from "../../lib/time"
+import { SkeletonDashTable } from "../../components/skeleton"
+import ConfirmOverlay from "../../components/ConfirmOverlay"
 
-/* Report queue — a user reports a post/comment/user with a fixed reason; the
-   admin sees the reason + reporter note and can dismiss, warn, or remove.
-   Actions are mock-only (useState) until the backend lands. */
+/* The flag queue — posts and members in one list (one row per flag).
+   Dismiss clears a single flag; removing deletes the flagged post for
+   everyone and clears all of its flags. Member flags only ever offer
+   dismiss — deleting an account is not a list-row action. */
 
 const REASON_BADGE = {
   Spam: "warn",
@@ -15,89 +20,151 @@ const REASON_BADGE = {
   Other: "",
 }
 
-const STATUS_BADGE = {
-  Pending: "warn",
-  Reviewing: "",
-  Removed: "good",
-  Dismissed: "off",
-  Warned: "good",
-}
-
-function badgeClass(map, key) {
-  const tone = map[key]
+function badgeClass(key) {
+  const tone = REASON_BADGE[key]
   return tone ? `dash-badge ${tone}` : "dash-badge"
 }
 
 function DashReports() {
-  const [reports, setReports] = useState(MOCK_REPORTS)
+  const [reports, setReports] = useState(null) // null = still loading
+  const [error, setError] = useState("")
+  const [confirmReport, setConfirmReport] = useState(null) // post flag awaiting removal
 
-  function act(id, status) {
-    setReports((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)))
+  useEffect(() => {
+    let cancelled = false
+    api("/admin/reports")
+      .then((payload) => {
+        if (!cancelled) {
+          setReports(payload?.data ?? [])
+          setError("")
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setReports([])
+          setError(err.message || "Could not load the reports.")
+        }
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  function dismissFlag(reportId) {
+    api(`/admin/reports/${reportId}`, { method: "DELETE" })
+      .then(() => {
+        setReports((prev) => (prev ?? []).filter((r) => r.id !== reportId))
+      })
+      .catch((err) => setError(err.message || "Could not dismiss this flag."))
   }
 
-  const openCount = reports.filter(
-    (r) => r.status === "Pending" || r.status === "Reviewing",
-  ).length
+  function removePost(report) {
+    if (!report.post) return
+    setConfirmReport(report)
+  }
+
+  function confirmRemovePost() {
+    const post = confirmReport?.post
+    setConfirmReport(null)
+    if (!post) return
+    api(`/admin/posts/${post.id}`, { method: "DELETE" })
+      .then(() => {
+        setReports((prev) => (prev ?? []).filter((r) => r.post?.id !== post.id))
+      })
+      .catch((err) => setError(err.message || "Could not remove this post."))
+  }
+
+  const openCount = reports?.length ?? 0
 
   return (
     <section className="dash-panel">
-      <h2>Reports queue — {openCount} open</h2>
-      <p className="dash-note">Dismiss, warn, or remove the reported target. Actions are mock-only.</p>
-      {reports.length === 0 ? (
-        <p className="dash-empty">Queue is clear — no reports left.</p>
-      ) : (
+      <h2>Reports — {openCount} open</h2>
+      {error ? <p className="job-form-error">{error}</p> : null}
+      {reports === null ? (
+        <SkeletonDashTable rows={4} cells={6} />
+      ) : reports.length === 0 ? null : (
         <table className="dash-table">
           <thead>
             <tr>
               <th>Type</th>
               <th>Target</th>
-              <th>Report</th>
+              <th>Reason</th>
               <th>Reporter</th>
               <th>Time</th>
-              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {reports.map((r) => (
-              <tr key={r.id}>
-                <td>{r.type}</td>
-                <td>{r.target}</td>
-                <td>
-                  <span className={badgeClass(REASON_BADGE, r.reason)}>
-                    {r.reason}
-                  </span>
-                  <p className="dash-note report-details">{r.details}</p>
-                </td>
-                <td>{r.reporter}</td>
-                <td>{r.time}</td>
-                <td>
-                  <span className={badgeClass(STATUS_BADGE, r.status)}>
-                    {r.status}
-                  </span>
-                </td>
-                <td>
-                  {r.status === "Pending" || r.status === "Reviewing" ? (
+            {reports.map((r) => {
+              const isPost = r.type === "post"
+              return (
+                <tr key={r.id}>
+                  <td>
+                    <span className={isPost ? "dash-badge off" : "dash-badge warn"}>
+                      {isPost ? "Post" : "Member"}
+                    </span>
+                  </td>
+                  <td className="report-post-cell">
+                    {isPost ? (
+                      r.post?.author?.username ? (
+                        <Link className="dash-user-link" to={`/Profile/${r.post.author.username}`}>
+                          @{r.post.author.username}
+                        </Link>
+                      ) : null
+                    ) : (
+                      <Link className="dash-user-link" to={`/Profile/${r.user?.username}`}>
+                        @{r.user?.username ?? "—"}
+                      </Link>
+                    )}
+                    <span className="dash-dim">
+                      {isPost ? ` — ${r.post?.body}` : " — reported account"}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={badgeClass(r.reason)}>{r.reason}</span>
+                  </td>
+                  <td>
+                    <Link className="dash-user-link" to={`/Profile/${r.reporter?.username}`}>
+                      {r.reporter?.username ?? "—"}
+                    </Link>
+                  </td>
+                  <td>{timeAgo(r.created_at)}</td>
+                  <td>
                     <div className="dash-actions">
-                      <button type="button" className="dash-btn" onClick={() => act(r.id, "Dismissed")}>
+                      <button
+                        type="button"
+                        className="dash-btn"
+                        onClick={() => dismissFlag(r.id)}
+                      >
                         Dismiss
                       </button>
-                      {r.status === "Pending" ? (
-                        <button type="button" className="dash-btn" onClick={() => act(r.id, "Warned")}>
-                          Warn
+                      {isPost ? (
+                        <button
+                          type="button"
+                          className="dash-btn danger"
+                          onClick={() => removePost(r)}
+                        >
+                          Remove
                         </button>
                       ) : null}
-                      <button type="button" className="dash-btn danger" onClick={() => act(r.id, "Removed")}>
-                        Remove
-                      </button>
                     </div>
-                  ) : null}
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       )}
+
+      {confirmReport?.post ? (
+        <ConfirmOverlay
+          title="Remove post"
+          message="Remove this post for everyone? This can't be undone."
+          confirmLabel="Remove"
+          onClose={() => setConfirmReport(null)}
+          onConfirm={confirmRemovePost}
+        />
+      ) : null}
     </section>
   )
 }

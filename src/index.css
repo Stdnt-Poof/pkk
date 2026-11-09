@@ -1,10 +1,3 @@
-/* ============================================================
-   Palette — freelance marketplace, minimalist-professional
-   - primary: trust blue (identity, active states, links)
-   - secondary: green (CTAs / money actions, Upwork-style)
-   - accent: quiet gold (money highlights only)
-   - neutrals: never full black/white, soft navy-gray family
-   ============================================================ */
 :root {
     color-scheme: dark;
     --bg-dark: hsl(222 22% 7%);

@@ -1,8 +1,7 @@
 import { useState } from "react"
 import SettingsSub from "../../components/settings/SettingsSub"
 import Toggle from "../../components/settings/Toggle"
-
-/* BACKEND NEEDED: PATCH /api/users/me/settings/notifications — mock only. */
+import { useSettings } from "../../lib/settings"
 
 const TYPE_ROWS = [
   { key: "mentions", label: "Mentions" },
@@ -20,29 +19,50 @@ const DURATIONS = [
   { value: "168", label: "7 days" },
 ]
 
+const DEFAULT_TYPES = {
+  mentions: true,
+  replies: true,
+  likes: true,
+  follows: true,
+  jobs: true,
+  dms: true,
+}
+
 function MuteNotif() {
-  const [muteAll, setMuteAll] = useState(false)
-  const [duration, setDuration] = useState("1")
-  const [types, setTypes] = useState({
-    mentions: true,
-    replies: true,
-    likes: true,
-    follows: true,
-    jobs: true,
-    dms: true,
-  })
+  const { settings, error, save } = useSettings()
+  const [muteAll, setMuteAll] = useState(() => settings.mute_all ?? false)
+  const [duration, setDuration] = useState(() => settings.mute_duration ?? "1")
+  const [types, setTypes] = useState(() => ({ ...DEFAULT_TYPES, ...(settings.notif_types ?? {}) }))
+
+  function onMute(value) {
+    setMuteAll(value)
+    save({ mute_all: value })
+  }
+
+  function onDuration(value) {
+    setDuration(value)
+    save({ mute_duration: value })
+  }
 
   function setType(key) {
-    return (value) => setTypes((prev) => ({ ...prev, [key]: value }))
+    return (value) => {
+      const next = { ...types, [key]: value }
+      setTypes(next)
+      save({ notif_types: next })
+    }
   }
 
   return (
     <SettingsSub backTo="/Settings/Notifications" backLabel="Notification" title="Mute Notification">
-      <Toggle checked={muteAll} onToggle={setMuteAll} label="Mute all notifications" />
+      <Toggle checked={muteAll} onToggle={onMute} label="Mute all notifications" />
       {muteAll ? (
         <label className="settings-field">
           <span>Mute for</span>
-          <select className="settings-select" value={duration} onChange={(e) => setDuration(e.target.value)}>
+          <select
+            className="settings-select"
+            value={duration}
+            onChange={(e) => onDuration(e.target.value)}
+          >
             {DURATIONS.map((d) => (
               <option key={d.value} value={d.value}>{d.label}</option>
             ))}
@@ -59,7 +79,7 @@ function MuteNotif() {
           label={row.label}
         />
       ))}
-      <p className="settings-note">Defaults: everything on, like X/Twitter. Mock — not saved.</p>
+      {error ? <p className="job-form-error">{error}</p> : null}
     </SettingsSub>
   )
 }

@@ -24,7 +24,6 @@ function DashHomePosts() {
   return (
     <section className="dash-panel">
       <h2>Home posts — {posts.length} live</h2>
-      <p className="dash-note">Feed posts on the home page, per user. Snippets only — no full bodies.</p>
       {posts.length === 0 ? (
         <p className="dash-empty">Nothing posted right now.</p>
       ) : (
@@ -88,7 +87,6 @@ function DashHomePosts() {
           </tbody>
         </table>
       )}
-      <p className="dash-note">Hidden posts stay on the platform but disappear from the home feed.</p>
     </section>
   )
 }

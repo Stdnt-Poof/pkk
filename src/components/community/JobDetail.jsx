@@ -72,7 +72,7 @@ function JobDetail({ job, isSaved, onClose, onToggleSave, onAddComment }) {
         <section className="job-comments">
           <h3>Discussion ({job.comments.length})</h3>
           {job.comments.length === 0 ? (
-            <p className="messages-placeholder">No comments yet. Ask the first question.</p>
+            <p className="messages-placeholder">No comments yet, Ask about the job!</p>
           ) : (
             <ul className="job-comment-list">
               {job.comments.map((c) => (

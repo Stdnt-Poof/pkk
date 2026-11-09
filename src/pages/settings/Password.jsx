@@ -1,11 +1,11 @@
 import { useState } from "react"
 import SettingsSub from "../../components/settings/SettingsSub"
-
-/* BACKEND NEEDED: POST /api/auth/password — mock only. */
+import api from "../../lib/api"
 
 function Password() {
   const [form, setForm] = useState({ current: "", next: "", confirm: "" })
   const [done, setDone] = useState(false)
+  const [error, setError] = useState("")
   const ok = form.current !== "" && form.next.length >= 8 && form.next === form.confirm
 
   function set(field) {
@@ -14,7 +14,17 @@ function Password() {
 
   function submit(e) {
     e.preventDefault()
-    setDone(true)
+    setDone(false)
+    setError("")
+    api("/auth/password", {
+      method: "POST",
+      body: { current: form.current, next: form.next, confirm: form.confirm },
+    })
+      .then(() => {
+        setDone(true)
+        setForm({ current: "", next: "", confirm: "" })
+      })
+      .catch((err) => setError(err.message || "Could not change your password."))
   }
 
   return (
@@ -37,8 +47,9 @@ function Password() {
           Save password
         </button>
         {done ? (
-          <p className="settings-note">Mock — the password would be changed now. Nothing is stored.</p>
+          <p className="settings-note">Your password has been updated.</p>
         ) : null}
+        {error ? <p className="job-form-error">{error}</p> : null}
       </form>
     </SettingsSub>
   )

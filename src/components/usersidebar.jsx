@@ -18,6 +18,10 @@ function Usersidebar() {
                 <Icon name="home" />
                 <span>Home</span>
               </NavLink>
+              <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Hire">
+                <Icon name="community" />
+                <span>Hire</span>
+              </NavLink>
               <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Profile">
                 <Icon name="profile" />
                 <span>Profile</span>
@@ -25,10 +29,6 @@ function Usersidebar() {
               <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Messages">
                 <Icon name="messages" />
                 <span>Messages</span>
-              </NavLink>
-              <NavLink className={({isActive})=> `sidebar-item${isActive ? ' isActive':''}`} to="/Community">
-                <Icon name="community" />
-                <span>Community</span>
               </NavLink>
               <NavLink className={({ isActive }) => `sidebar-item${isActive ? ' isActive' : ''}`}
                   to="/Settings">

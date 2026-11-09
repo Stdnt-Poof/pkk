@@ -1,14 +1,20 @@
 import { useState } from "react"
 import SettingsSub from "../../components/settings/SettingsSub"
 import Toggle from "../../components/settings/Toggle"
-
-/* BACKEND NEEDED: PATCH /api/users/me/settings/chats — mock only. */
+import { useSettings } from "../../lib/settings"
 
 function ChatsPrivacy() {
-  const [state, setState] = useState({ requests: true, receipts: true })
+  const { settings, error, save } = useSettings()
+  const [state, setState] = useState(() => ({
+    requests: settings.chat_requests ?? true,
+    receipts: settings.chat_receipts ?? true,
+  }))
 
   function set(field) {
-    return (value) => setState((prev) => ({ ...prev, [field]: value }))
+    return (value) => {
+      setState((prev) => ({ ...prev, [field]: value }))
+      save(field === "requests" ? { chat_requests: value } : { chat_receipts: value })
+    }
   }
 
   return (
@@ -23,7 +29,7 @@ function ChatsPrivacy() {
         onToggle={set("receipts")}
         label="Show read receipts"
       />
-      <p className="settings-note">Defaults are on, like X/Twitter. Mock — not saved.</p>
+      {error ? <p className="job-form-error">{error}</p> : null}
     </SettingsSub>
   )
 }

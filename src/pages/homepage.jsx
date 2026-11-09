@@ -1,96 +1,191 @@
-import { useState } from "react"
-import { NavLink } from "react-router-dom"
-import PostCard from "../components/PostCard.jsx"
-import { MOCK_POSTS } from "../data/mockPosts.js"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { NavLink, useNavigate } from "react-router-dom"
+import api from "../lib/api"
+import PostFeed from "../components/PostFeed.jsx"
+import { SkeletonSearchResults, SkeletonUnreadPanel } from "../components/skeleton.jsx"
 
 /* ============================================================================
-   BACKEND NEEDED — FE-only mock, replace with real API (wrapped section START)
-   ----------------------------------------------------------------------------
-   What is currently masked as FE here and needs a BE:
-   - GET    /api/posts            -> feed list (replaces MOCK_POSTS + useState)
-   - POST   /api/posts            -> create post (replaces handlePost local prepend)
-   - POST   /api/posts/:id/like   -> toggle like (replaces onToggleLike)
-   - POST   /api/posts/:id/save   -> toggle save/bookmark (replaces onToggleSave)
-   - GET    /api/posts/:id/comments
-   - POST   /api/posts/:id/comments       -> add comment (replaces onAddComment)
-   - POST   /api/comments/:id/like        -> like a comment (replaces onToggleCommentLike)
-   - GET    /api/posts/:id/views or view ping for impression counts
-   Everything between BE-MOCK-START and BE-MOCK-END below is local-only state
-   and must be deleted once the endpoints above land (keep <PostCard /> usage).
+   Member search — typeahead over OTHER members (self is excluded server-side).
+   Click a result, or press Enter, to open /Profile/:username
    ============================================================================ */
-// --- BE-MOCK-START (feed state: likes, saves, comments, composer) ---
+function MemberSearch() {
+  const navigate = useNavigate()
+  const [query, setQuery] = useState("")
+  const [results, setResults] = useState([])
+  const [searching, setSearching] = useState(false)
+  const [open, setOpen] = useState(false)
+  // Enter pressed while results were still loading — jump once they land.
+  const enterPending = useRef(false)
+
+  const selectMember = useCallback(
+    (member) => {
+      enterPending.current = false
+      setQuery("")
+      setResults([])
+      setOpen(false)
+      navigate(`/Profile/${member.username}`)
+    },
+    [navigate]
+  )
+
+  useEffect(() => {
+    const term = query.trim()
+    if (!term) return undefined
+
+    let cancelled = false
+    const timer = setTimeout(() => {
+      api(`/users/search?q=${encodeURIComponent(term)}`)
+        .then((payload) => {
+          if (cancelled) return
+          const list = payload?.data ?? []
+          setResults(list)
+          setSearching(false)
+          if (enterPending.current) {
+            enterPending.current = false
+            if (list.length > 0) selectMember(list[0])
+          }
+        })
+        .catch(() => {
+          if (cancelled) return
+          enterPending.current = false
+          setResults([])
+          setSearching(false)
+        })
+    }, 300)
+
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
+  }, [query, selectMember])
+
+  function handleQueryChange(e) {
+    const value = e.target.value
+    setQuery(value)
+    if (!value.trim()) {
+      enterPending.current = false
+      setResults([])
+      setSearching(false)
+    } else {
+      setSearching(true)
+    }
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === "Escape") {
+      enterPending.current = false
+      setOpen(false)
+      return
+    }
+    if (e.key !== "Enter") return
+    e.preventDefault()
+    if (!query.trim()) return
+    if (searching) {
+      // Results are on their way — open the first match when it lands.
+      enterPending.current = true
+      return
+    }
+    if (results.length > 0) selectMember(results[0])
+  }
+
+  const showDropdown = open && Boolean(query.trim())
+
+  return (
+    <div className="search-wrap">
+      <input
+        className="search-bar"
+        type="search"
+        placeholder="Search people"
+        aria-label="Search people"
+        aria-expanded={showDropdown}
+        aria-controls="member-search-results"
+        value={query}
+        onChange={handleQueryChange}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setOpen(false)}
+        onKeyDown={handleKeyDown}
+      />
+
+      {showDropdown ? (
+        <div
+          id="member-search-results"
+          className="search-results"
+          role="listbox"
+          aria-label="Member search results"
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          {searching && results.length === 0 ? (
+            <SkeletonSearchResults />
+          ) : results.length === 0 ? (
+            <p className="search-results-empty">No people found</p>
+          ) : (
+            results.map((member, index) => (
+              <button
+                key={member.id}
+                type="button"
+                className={index === 0 ? "search-result is-active" : "search-result"}
+                role="option"
+                aria-selected={index === 0}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => selectMember(member)}
+              >
+                {member.avatar_url ? (
+                  <img className="search-result-avatar" src={member.avatar_url} alt="" />
+                ) : (
+                  <span className="search-result-avatar search-result-initial" aria-hidden="true">
+                    {member.username?.charAt(0)?.toUpperCase()}
+                  </span>
+                )}
+                <span className="search-result-name">{member.username}</span>
+              </button>
+            ))
+          )}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+/* ============================================================================
+   Unread messages panel — sum of unread counts across the member's threads.
+   ============================================================================ */
+function UnreadPanel() {
+  const [unread, setUnread] = useState(null) // null = still loading
+
+  useEffect(() => {
+    let cancelled = false
+    api("/threads")
+      .then((payload) => {
+        if (!cancelled) {
+          const total = (payload?.data ?? []).reduce((sum, thread) => sum + (thread.unread ?? 0), 0)
+          setUnread(total)
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setUnread(0)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  return (
+    <section className="messages-panel">
+      <h2>Unread Messages</h2>
+      {unread === null ? (
+        <SkeletonUnreadPanel />
+      ) : (
+        <p className="messages-placeholder">
+          {unread > 0
+            ? `${unread} unread message${unread === 1 ? "" : "s"}`
+            : "No unread messages"}
+        </p>
+      )}
+    </section>
+  )
+}
 
 function Homepage() {
-  const [posts, setPosts] = useState(MOCK_POSTS)
-  const [composer, setComposer] = useState("")
-
-  function updatePost(id, fn) {
-    setPosts((prev) => prev.map((p) => (p.id === id ? fn(p) : p)))
-  }
-
-  function handlePost(e) {
-    e.preventDefault()
-    const text = composer.trim()
-    if (!text) return
-    const post = {
-      id: `post-${Date.now()}`,
-      author: "You",
-      handle: "@you",
-      time: "now",
-      text,
-      tags: [],
-      likes: 0,
-      views: 0,
-      liked: false,
-      saved: false,
-      comments: [],
-    }
-    setPosts((prev) => [post, ...prev])
-    setComposer("")
-  }
-
-  function handleToggleLike(id) {
-    updatePost(id, (p) => ({
-      ...p,
-      liked: !p.liked,
-      likes: p.likes + (p.liked ? -1 : 1),
-    }))
-  }
-
-  function handleToggleSave(id) {
-    updatePost(id, (p) => ({ ...p, saved: !p.saved }))
-  }
-
-  function handleAddComment(postId, text) {
-    updatePost(postId, (p) => ({
-      ...p,
-      comments: [
-        ...p.comments,
-        {
-          id: `c-${Date.now()}`,
-          author: "You",
-          handle: "@you",
-          time: "now",
-          text,
-          likes: 0,
-          liked: false,
-        },
-      ],
-    }))
-  }
-
-  function handleToggleCommentLike(postId, commentId) {
-    updatePost(postId, (p) => ({
-      ...p,
-      comments: p.comments.map((c) =>
-        c.id === commentId
-          ? { ...c, liked: !c.liked, likes: c.likes + (c.liked ? -1 : 1) }
-          : c,
-      ),
-    }))
-  }
-  // --- BE-MOCK-END (everything above is local-only; see banner on top) ---
-
   return (
     <div className="page-layout home-page-layout">
       <main className="center-content">
@@ -123,61 +218,13 @@ function Homepage() {
             <h1>Home</h1>
           </header>
 
-          <form className="post-composer" onSubmit={handlePost}>
-            <div className="post-avatar" aria-hidden="true">Y</div>
-            <div className="post-composer-main">
-              <input
-                className="composer-input post-composer-input"
-                value={composer}
-                onChange={(e) => setComposer(e.target.value)}
-                placeholder="What is happening?"
-                aria-label="Create a post"
-                maxLength={280}
-              />
-              <div className="post-composer-row">
-                <span className="post-composer-count">{composer.length}/280</span>
-                <button
-                  type="submit"
-                  className="job-btn job-btn-primary"
-                  disabled={!composer.trim()}
-                >
-                  Post
-                </button>
-              </div>
-            </div>
-          </form>
-
-          <div className="feed-content">
-            {posts.length === 0 ? (
-              <p className="feed-empty">No posts yet. Be the first to post.</p>
-            ) : (
-              posts.map((post) => (
-                <PostCard
-                  key={post.id}
-                  post={post}
-                  onToggleLike={handleToggleLike}
-                  onToggleSave={handleToggleSave}
-                  onAddComment={handleAddComment}
-                  onToggleCommentLike={handleToggleCommentLike}
-                />
-              ))
-            )}
-          </div>
+          <PostFeed composer />
         </section>
       </main>
 
       <aside className="right-sidebar">
-        <input
-          className="search-bar"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-        />
-
-        <section className="messages-panel">
-          <h2>Unread Messages</h2>
-          <p className="messages-placeholder">No unread messages</p>
-        </section>
+        <MemberSearch />
+        <UnreadPanel />
       </aside>
     </div>
   )

@@ -34,7 +34,6 @@ function DashCommunityPosts() {
   return (
     <section className="dash-panel">
       <h2>Community posts — {jobs.length} live</h2>
-      <p className="dash-note">Jobs on the community page, per user. List view only — no full detail.</p>
       {jobs.length === 0 ? (
         <p className="dash-empty">Nothing posted right now.</p>
       ) : (
@@ -97,7 +96,6 @@ function DashCommunityPosts() {
           </tbody>
         </table>
       )}
-      <p className="dash-note">Hidden jobs stay on the platform but disappear from the community list.</p>
     </section>
   )
 }

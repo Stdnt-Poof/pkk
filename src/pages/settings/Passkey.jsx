@@ -12,9 +12,6 @@ function Passkey() {
 
   return (
     <SettingsSub backTo="/Settings/Security" backLabel="Account Security" title="Manage Passkey">
-      <p className="settings-note">
-        Passkeys let you sign in with your fingerprint, face, or device lock instead of a password.
-      </p>
       {passkeys.length === 0 ? (
         <p className="settings-note">No passkeys on this account yet.</p>
       ) : (

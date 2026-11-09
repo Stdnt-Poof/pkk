@@ -4,14 +4,12 @@ function ProfileBackground({ src, type }) {
         return (
             <video
                 className="profile-bg-media"
+                src={src}
                 autoPlay
                 muted
                 loop
                 playsInline
-            >
-                <source src={src} type="video/webm" />
-                <source src={src} type="video/mp4" />
-            </video>
+            />
         )
     }
 

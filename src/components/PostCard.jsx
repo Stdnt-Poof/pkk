@@ -1,21 +1,42 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import ReportOverlay from "./ReportOverlay"
+import ConfirmOverlay from "./ConfirmOverlay"
+import { IconComment, IconFlag, IconHeart, IconShare, IconTrash } from "./icons"
+import { useAuth } from "../lib/auth"
 
 function formatCount(n) {
   if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, "")}k`
   return String(n)
 }
 
-function PostCard({ post, onToggleLike, onToggleSave, onAddComment, onToggleCommentLike }) {
+function PostCard({ post, onToggleLike, onAddComment, onToggleCommentLike, onReport, onDelete }) {
+  const navigate = useNavigate()
+  const { isAdmin } = useAuth()
   const [expanded, setExpanded] = useState(false)
   const [draft, setDraft] = useState("")
+  const [reportOpen, setReportOpen] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
-  function submitComment(e) {
+  async function submitComment(e) {
     e.preventDefault()
     const text = draft.trim()
     if (!text) return
-    onAddComment(post.id, text)
-    setDraft("")
-    setExpanded(true)
+    const added = await onAddComment(post.id, text)
+    if (added !== false) {
+      setDraft("")
+      setExpanded(true)
+    }
+  }
+
+  async function submitReport(reason) {
+    const outcome = await onReport?.(post.id, reason)
+    if (outcome === null) setReportOpen(false) // success — the overlay closes itself
+    return outcome
+  }
+
+  function openProfile() {
+    if (post.username) navigate(`/Profile/${post.username}`)
   }
 
   async function handleShare() {
@@ -31,6 +52,15 @@ function PostCard({ post, onToggleLike, onToggleSave, onAddComment, onToggleComm
     }
   }
 
+  function handleDelete() {
+    setConfirmOpen(true)
+  }
+
+  function confirmDelete() {
+    setConfirmOpen(false)
+    onDelete?.(post.id)
+  }
+
   return (
     <article className="feed-post post-card">
       <div className="post-card-top">
@@ -39,7 +69,15 @@ function PostCard({ post, onToggleLike, onToggleSave, onAddComment, onToggleComm
         </div>
         <div className="post-identity">
           <h3>
-            {post.author} <span>{post.handle} · {post.time}</span>
+            <button
+              type="button"
+              className="post-author-link"
+              onClick={openProfile}
+              disabled={!post.username}
+            >
+              {post.author}
+            </button>{" "}
+            <span>{post.handle} · {post.time}</span>
           </h3>
           {post.tags?.length ? (
             <div className="post-tags">
@@ -49,16 +87,40 @@ function PostCard({ post, onToggleLike, onToggleSave, onAddComment, onToggleComm
             </div>
           ) : null}
         </div>
-        <button
-          type="button"
-          className={post.saved ? "post-icon-btn is-saved" : "post-icon-btn"}
-          onClick={() => onToggleSave(post.id)}
-          aria-pressed={post.saved}
-          aria-label={post.saved ? "Unsave post" : "Save post"}
-          title={post.saved ? "Unsave" : "Save"}
-        >
-          {post.saved ? "★" : "☆"}
-        </button>
+        <div className="post-top-actions">
+          {!post.is_mine && onReport ? (
+            post.flagged ? (
+              <span
+                className="post-icon-btn is-flagged"
+                title="Flagged for review"
+                aria-label="Flagged for review"
+              >
+                <IconFlag />
+              </span>
+            ) : (
+              <button
+                type="button"
+                className="post-icon-btn"
+                onClick={() => setReportOpen(true)}
+                aria-label="Report"
+                title="Report"
+              >
+                <IconFlag />
+              </button>
+            )
+          ) : null}
+          {post.is_mine || isAdmin ? (
+            <button
+              type="button"
+              className="post-icon-btn is-delete"
+              onClick={handleDelete}
+              aria-label="Delete post"
+              title="Delete"
+            >
+              <IconTrash />
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <p className="post-text">{post.text}</p>
@@ -73,14 +135,9 @@ function PostCard({ post, onToggleLike, onToggleSave, onAddComment, onToggleComm
             aria-label={`${post.comments.length} comments`}
             title="Comments"
           >
-            <span aria-hidden="true">💬</span>
+            <span aria-hidden="true"><IconComment /></span>
             <span>{formatCount(post.comments.length)}</span>
           </button>
-
-          <span className="post-action post-views" title="Views" aria-label={`${post.views} views`}>
-            <span aria-hidden="true">📊</span>
-            <span>{formatCount(post.views)}</span>
-          </span>
         </div>
 
         <div className="post-actions-right">
@@ -92,12 +149,12 @@ function PostCard({ post, onToggleLike, onToggleSave, onAddComment, onToggleComm
             aria-label={`${post.likes} likes`}
             title="Like"
           >
-            <span aria-hidden="true">{post.liked ? "❤️" : "🤍"}</span>
+            <span aria-hidden="true"><IconHeart /></span>
             <span>{formatCount(post.likes)}</span>
           </button>
 
           <button type="button" className="post-action" onClick={handleShare} aria-label="Share post" title="Share">
-            <span aria-hidden="true">📤</span>
+            <span aria-hidden="true"><IconShare /></span>
           </button>
         </div>
       </div>
@@ -105,7 +162,7 @@ function PostCard({ post, onToggleLike, onToggleSave, onAddComment, onToggleComm
       {expanded ? (
         <section className="post-comments" aria-label="Comments">
           {post.comments.length === 0 ? (
-            <p className="messages-placeholder">No comments yet. Be the first to reply.</p>
+            <p className="messages-placeholder">No comments yet. Be the first to reply!</p>
           ) : (
             <ul className="post-comment-list">
               {post.comments.map((c) => (
@@ -124,7 +181,7 @@ function PostCard({ post, onToggleLike, onToggleSave, onAddComment, onToggleComm
                     aria-label={`Like comment, ${c.likes} likes`}
                     title="Like comment"
                   >
-                    <span aria-hidden="true">{c.liked ? "❤️" : "🤍"}</span>
+                    <span aria-hidden="true"><IconHeart /></span>
                     <span>{formatCount(c.likes)}</span>
                   </button>
                 </li>
@@ -145,6 +202,24 @@ function PostCard({ post, onToggleLike, onToggleSave, onAddComment, onToggleComm
             </button>
           </form>
         </section>
+      ) : null}
+
+      {reportOpen ? (
+        <ReportOverlay
+          title="Report this post"
+          onClose={() => setReportOpen(false)}
+          onSubmit={submitReport}
+        />
+      ) : null}
+
+      {confirmOpen ? (
+        <ConfirmOverlay
+          title="Delete post"
+          message="Delete this post for everyone? This can't be undone."
+          confirmLabel="Delete"
+          onClose={() => setConfirmOpen(false)}
+          onConfirm={confirmDelete}
+        />
       ) : null}
     </article>
   )

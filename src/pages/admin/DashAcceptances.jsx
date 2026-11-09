@@ -8,7 +8,6 @@ function DashAcceptances() {
   return (
     <section className="dash-panel">
       <h2>Job acceptances — past 7 days</h2>
-      <p className="dash-note">What jobs users applied for this week. Older entries are not shown.</p>
       <table className="dash-table">
         <thead>
           <tr>
@@ -43,7 +42,6 @@ function DashAcceptances() {
           ))}
         </tbody>
       </table>
-      <p className="dash-note">Showing {MOCK_ACCEPTANCES.length} of 184 applications this week — mock data.</p>
     </section>
   )
 }

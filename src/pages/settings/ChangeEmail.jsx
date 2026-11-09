@@ -9,12 +9,10 @@ function ChangeEmail() {
   const { user } = useAuth()
   const currentEmail = user?.email ?? ""
   const [next, setNext] = useState("")
-  const [sent, setSent] = useState(false)
   const valid = next.includes("@") && next.trim() !== "" && next.trim() !== currentEmail
 
   function submit(e) {
     e.preventDefault()
-    setSent(true)
   }
 
   return (
@@ -37,11 +35,6 @@ function ChangeEmail() {
         <button className="settings-btn" type="submit" disabled={!valid}>
           Send verification code
         </button>
-        {sent ? (
-          <p className="settings-note">
-            Mock — a verification code would be sent to {next}. No email actually goes out.
-          </p>
-        ) : null}
       </form>
     </SettingsSub>
   )

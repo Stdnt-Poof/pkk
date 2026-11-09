@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import SettingsSub from "../../components/settings/SettingsSub"
+import { SkeletonSettingsRows } from "../../components/skeleton"
 import api from "../../lib/api"
 import { useAuth } from "../../lib/auth"
 
@@ -50,9 +51,11 @@ function AccInfo() {
   if (!account) {
     return (
       <SettingsSub backTo="/Settings/YourAccount" backLabel="Your Account" title="Account Info">
-        <p className={error ? "job-form-error" : "settings-note"}>
-          {error || "Loading your account…"}
-        </p>
+        {error ? (
+          <p className="job-form-error">{error}</p>
+        ) : (
+          <SkeletonSettingsRows />
+        )}
       </SettingsSub>
     )
   }
@@ -66,7 +69,7 @@ function AccInfo() {
 
   return (
     <SettingsSub backTo="/Settings/YourAccount" backLabel="Your Account" title="Account Info">
-      <p className="settings-note">Your account details. Edit them on your profile page.</p>
+      <p className="settings-note">Your Account Details</p>
       <ul className="settings-rows">
         {rows.map((row) => (
           <li key={row.label}>

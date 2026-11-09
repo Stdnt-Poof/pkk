@@ -1,7 +1,9 @@
 import { useState } from "react"
 import SettingsSub from "../../components/settings/SettingsSub"
+import { useSettings } from "../../lib/settings"
 
-/* BACKEND NEEDED: i18n — mock only, language switching is not wired up. */
+/* The chosen language is saved to the account and restored on login.
+   Translating the interface itself is a separate (i18n) task. */
 
 const LANGUAGES = [
   { value: "en", label: "English (US)" },
@@ -9,7 +11,13 @@ const LANGUAGES = [
 ]
 
 function LanguagePref() {
-  const [lang, setLang] = useState("en")
+  const { settings, error, save } = useSettings()
+  const [lang, setLang] = useState(() => settings.language ?? "en")
+
+  function pick(value) {
+    setLang(value)
+    save({ language: value })
+  }
 
   return (
     <SettingsSub backTo="/Settings/Display" backLabel="Display, and Language" title="Language">
@@ -19,7 +27,7 @@ function LanguagePref() {
           <select
             className="settings-select"
             value={lang}
-            onChange={(e) => setLang(e.target.value)}
+            onChange={(e) => pick(e.target.value)}
           >
             {LANGUAGES.map((option) => (
               <option key={option.value} value={option.value}>{option.label}</option>
@@ -27,7 +35,7 @@ function LanguagePref() {
           </select>
         </label>
       </form>
-      <p className="settings-note">Mock — the interface language is not wired up yet. Default: English (US).</p>
+      {error ? <p className="job-form-error">{error}</p> : null}
     </SettingsSub>
   )
 }

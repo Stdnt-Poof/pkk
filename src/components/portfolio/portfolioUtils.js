@@ -16,6 +16,16 @@ export function isValidExternalUrl(raw) {
   return true
 }
 
+const PROJECT_HOSTS = ["github.com", "www.github.com", "gitlab.com", "www.gitlab.com"]
+
+// Projects only accept GitHub or GitLab repository links.
+export function isValidProjectUrl(raw) {
+  if (!isValidExternalUrl(raw)) return false
+  const url = new URL(raw.trim())
+  if (!PROJECT_HOSTS.includes(url.hostname.toLowerCase())) return false
+  return url.pathname.trim() !== ""
+}
+
 export function ensurePdfFilename(name, fallback = "cv.pdf") {
   const base = (name || "").trim() || fallback
   const withoutExt = base.replace(/\.[a-z0-9]+$/i, "")
