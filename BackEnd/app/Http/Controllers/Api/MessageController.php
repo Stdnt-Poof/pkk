@@ -130,14 +130,11 @@ class MessageController extends Controller
      * Whether the current account may rate the other member.
      *
      * The hirer earns the right by having messaged the provider about one
-     * of the provider's services, and each pair rates only once.
+     * of the provider's services; repeat ratings are allowed (each one
+     * replaces the rater's previous vote).
      */
     private function canRate(User $me, User $other): bool
     {
-        if (array_key_exists($me->id, $other->ratings ?? [])) {
-            return false;
-        }
-
         return Message::query()
             ->where('sender_id', $me->id)
             ->where('recipient_id', $other->id)

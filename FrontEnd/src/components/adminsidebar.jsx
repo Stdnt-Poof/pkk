@@ -8,9 +8,8 @@ function Adminsidebar() {
     return (
         <>
         <aside className="left-sidebar" idkname>
-            {/* Replace this temporary mark with the real logo */}
             <NavLink className="brand" to="/Home">
-              <span className="brand-mark" />
+              <img className="brand-logo" src="/temple.svg" alt="Horizent" />
             </NavLink>
 
             <nav className="sidebar-navigation">

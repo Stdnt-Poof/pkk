@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import tmp from "../assets/temp.jpg"
-import msgbg from "../assets/msg.svg"
 
 function Teampage() {
     const [activeGroup, setActiveGroup] = useState(null)
@@ -44,7 +43,7 @@ function Teampage() {
               ) : (
                 <div className="conversation-empty">
                   <div className='msg-img-container'>
-                    <img className="no-drag" src={msgbg} alt="" />
+                    <img className="no-drag" src="/temple.svg" alt="" />
                   </div>
                 </div>
               )}

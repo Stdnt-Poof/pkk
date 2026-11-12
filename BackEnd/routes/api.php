@@ -74,7 +74,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/messages', [MessageController::class, 'show']);
     Route::post('/messages', [MessageController::class, 'store'])->middleware('throttle:60,1');
 
-    // Hire: a hirer rates the provider once, after a service DM.
+    // Hire: a hirer rates the provider after a service DM — repeat
+    // ratings replace the rater's previous vote.
     Route::post('/ratings', [RatingController::class, 'store'])->middleware('throttle:20,1');
 
     // Home feed: every member's posts, newest first.

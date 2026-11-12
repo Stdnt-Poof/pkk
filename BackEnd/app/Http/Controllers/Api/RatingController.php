@@ -15,9 +15,9 @@ class RatingController extends Controller
     /**
      * Let a hirer rate the provider they messaged about a service.
      *
-     * One shot per pair: the raw vote lands in the provider's JSON map,
-     * and the denormalized average the profile and service cards read
-     * is recomputed from it.
+     * The raw vote lands in the provider's JSON map under the rater's id —
+     * a repeat rating replaces the previous stars — and the denormalized
+     * average the profile and service cards read is recomputed from it.
      */
     public function store(StoreRatingRequest $request): JsonResponse
     {
@@ -28,10 +28,6 @@ class RatingController extends Controller
 
         $votes = $provider->ratings ?? [];
         $key = (string) $rater->id;
-
-        if (array_key_exists($key, $votes)) {
-            abort(Response::HTTP_UNPROCESSABLE_ENTITY, 'You have already rated this member.');
-        }
 
         $votes[$key] = (int) $request->validated('stars');
 

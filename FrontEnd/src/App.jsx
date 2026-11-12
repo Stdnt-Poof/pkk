@@ -42,8 +42,6 @@ function App() {
             <Route path="/Login" element={<Loginpage />} />
             <Route path="/Signup" element={<SignupPage />} />
           </Route>
-
-          {/* Everything below needs a logged in account. */}
           <Route element={<RequireAuth />}>
             <Route path="/Home" element={<HomeShell />}>
               <Route index element={<Homepage />} />
@@ -80,11 +78,6 @@ function App() {
               <Route index element={<Profilepage />} />
               <Route path=":username" element={<Profilepage />} />
             </Route>
-
-            {/* The dashboard and everything under it is admin only.
-                 The pathless <Dashboard /> route is the dashboard shell
-                 (title, welcome line, section nav) and every page below
-                 renders inside its <Outlet />. */}
             <Route element={<RequireAuth adminOnly />}>
               <Route path="/Dashboard" element={<HomeShell />}>
                 <Route element={<Dashboard />}>

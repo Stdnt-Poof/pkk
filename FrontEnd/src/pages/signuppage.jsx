@@ -61,7 +61,7 @@ function SignupPage() {
       }
     >
       <p className="form-kicker">Sign Up</p>
-      <h2>Welcome to Skilora</h2>
+      <h2>Welcome to Horizent</h2>
 
       <form className="signup-form" onSubmit={handleSubmit}>
         <div className="form-field">

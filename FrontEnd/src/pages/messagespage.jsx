@@ -4,18 +4,11 @@ import api from "../lib/api"
 import RatingStars from "../components/RatingStars"
 import { SkeletonConversation, SkeletonDmList } from "../components/skeleton"
 import defaultPfp from "../assets/Default.jpg"
-import msgbg from "../assets/msg.svg"
 import { IconStar } from "../components/icons"
 
 const THREAD_POLL_MS = 5000
 const LIST_POLL_MS = 10000
 
-/**
- * One open chat. Remounted per partner (key), so every thread starts
- * with fresh state instead of syncing it inside effects. The server
- * derives the thread from the message pair — a chat opened straight
- * from a Hire card simply has no messages yet.
- */
 function Conversation({ partnerId, serviceParam, onSent }) {
   const [partner, setPartner] = useState(null)
   const [messages, setMessages] = useState([])
@@ -139,7 +132,6 @@ function Conversation({ partnerId, serviceParam, onSent }) {
       })
 
       setMyRating(stars)
-      setCanRate(false)
       setPartner((prev) =>
         prev
           ? {
@@ -349,7 +341,7 @@ function Messagespage() {
         ) : (
           <div className="conversation-empty">
             <div className="msg-img-container">
-              <img className="no-drag" src={msgbg} alt="" />
+              <img className="no-drag" src="/temple.svg" alt="Horizent" />
             </div>
           </div>
         )}
