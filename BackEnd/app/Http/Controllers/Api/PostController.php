@@ -9,10 +9,13 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\PostResource;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\PostImage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PostController extends Controller
 {
@@ -34,6 +37,7 @@ class PostController extends Controller
 
         $query = Post::query()
             ->with('user:id,username,avatar_path,rating,rating_count')
+            ->with('images')
             ->withCount('likes')
             ->withExists(['likes as liked' => fn ($q) => $q->where('user_id', $user->id)])
             ->withExists(['saves as saved' => fn ($q) => $q->where('user_id', $user->id)])
@@ -57,17 +61,48 @@ class PostController extends Controller
 
     /**
      * Publish a new post to the feed.
+     *
+     * Text and pictures are optional in any combination (at least one of
+     * the two), and the pictures land on disk with their paths recorded
+     * on the post.
      */
     public function store(StorePostRequest $request): JsonResponse
     {
-        $post = $request->user()->posts()->make($request->validated());
+        $validated = $request->validated();
+        $images = $validated['images'] ?? [];
+        unset($validated['images']);
+
+        $validated['body'] = $validated['body'] ?? '';
+
+        $post = $request->user()->posts()->make($validated);
         $post->save();
+
+        foreach ($images as $file) {
+            $post->images()->create(['path' => $file->store('posts', 'local')]);
+        }
 
         $post->loadCount('likes');
 
-        return (new PostResource($post->load('user')->load('comments')))
+        return (new PostResource($post->load('user')->load('comments')->load('images')))
             ->response()
             ->setStatusCode(201);
+    }
+
+    /**
+     * Stream a post picture back to the feed.
+     *
+     * Public by design: <img> cannot carry a bearer token, and post
+     * pictures are not private data — same rule as profile media.
+     */
+    public function image(Post $post, PostImage $image): BinaryFileResponse
+    {
+        abort_unless($image->post_id === $post->id, Response::HTTP_NOT_FOUND);
+
+        $path = $image->path;
+
+        abort_unless($path && Storage::disk('local')->exists($path), Response::HTTP_NOT_FOUND);
+
+        return response()->file(Storage::disk('local')->path($path));
     }
 
     /**
@@ -155,13 +190,16 @@ class PostController extends Controller
     /**
      * Delete a post — the author's own, or any member's as an admin.
      *
-     * Comments, likes, saves and flags cascade away with the row.
+     * Comments, likes, saves and flags cascade away with the row, and
+     * the picture files are pulled off disk (the rows cascade too).
      */
     public function destroy(Request $request, Post $post): Response
     {
         $user = $request->user();
 
         abort_unless($post->user_id === $user->id || $user->isAdmin(), 403);
+
+        self::discardImages($post);
 
         $post->delete();
 
@@ -186,5 +224,23 @@ class PostController extends Controller
         return response()->json([
             'data' => ['liked' => $liked, 'likes' => $comment->likes()->count()],
         ]);
+    }
+
+    /**
+     * Remove a post's picture files from disk before the row goes.
+     *
+     * The post_images rows cascade with the post; the bytes do not.
+     * Shared with the admin delete via the same public helper so both
+     * paths leave no orphans.
+     */
+    public static function discardImages(Post $post): void
+    {
+        foreach ($post->images as $image) {
+            $path = $image->path;
+
+            if ($path && Storage::disk('local')->exists($path)) {
+                Storage::disk('local')->delete($path);
+            }
+        }
     }
 }

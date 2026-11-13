@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\PostImage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,6 +24,9 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'body' => $this->body,
             'created_at' => $this->created_at,
+            'images' => $this->images->map(
+                fn (PostImage $image) => route('posts.image', ['post' => $this->id, 'image' => $image->id])
+            )->values(),
             'tags' => $this->tags(),
             'likes' => $this->likes_count ?? 0,
             'liked' => (bool) ($this->liked ?? false),

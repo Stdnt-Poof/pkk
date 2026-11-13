@@ -1,11 +1,17 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import api from "../lib/api"
 import { timeAgo } from "../lib/time"
 import { useAuth } from "../lib/auth"
 import PostCard from "./PostCard"
 import { SkeletonFeed } from "./skeleton"
-import { IconFace } from "./icons"
+import { IconFace, IconImage, IconX } from "./icons"
+
+/** Most pictures one post can carry — mirrors StorePostRequest. */
+const MAX_IMAGES = 4
+
+/** Per-picture upload ceiling in bytes — 5 MB, mirrors the server rule. */
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024
 
 /** API comment -> PostCard's comment shape (author/handle/time/text). */
 function mapComment(c) {
@@ -29,6 +35,7 @@ function mapPost(p) {
     handle: `@${p.author?.username ?? ""}`,
     time: timeAgo(p.created_at),
     text: p.body,
+    images: p.images ?? [],
     tags: p.tags ?? [],
     likes: p.likes ?? 0,
     liked: Boolean(p.liked),
@@ -51,8 +58,15 @@ function PostFeed({ user, composer = false, emptyText }) {
   const [posts, setPosts] = useState(null) // null = still loading
   const [feedError, setFeedError] = useState("")
   const [draft, setDraft] = useState("")
+  const [images, setImages] = useState([]) // [{ file, url }] pending attach
   const [posting, setPosting] = useState(false)
   const [composerError, setComposerError] = useState("")
+  const fileInputRef = useRef(null)
+  const pendingUrlsRef = useRef([]) // live mirror of preview URLs for unmount cleanup
+
+  useEffect(() => {
+    pendingUrlsRef.current = images.map(({ url }) => url)
+  }, [images])
 
   const path = user ? `/posts?user=${encodeURIComponent(user)}` : "/posts"
 
@@ -137,16 +151,74 @@ function PostFeed({ user, composer = false, emptyText }) {
       })
   }
 
+  /* Attach picked or pasted files: type/size checked, capped at
+     MAX_IMAGES. Each file gets an object URL for the preview chip. */
+  function addImages(fileList) {
+    const files = Array.from(fileList || []).filter((f) => f.type.startsWith("image/"))
+    if (files.length === 0) return
+
+    const room = MAX_IMAGES - images.length
+    const accepted = files.slice(0, room).filter((f) => f.size <= MAX_IMAGE_BYTES)
+    const overLimit = files.length > room
+    const tooBig = files.slice(0, room).some((f) => f.size > MAX_IMAGE_BYTES)
+
+    if (overLimit) {
+      setComposerError(`A post can carry at most ${MAX_IMAGES} images.`)
+    } else if (tooBig) {
+      setComposerError("Images must be 5 MB or smaller.")
+    } else {
+      setComposerError("")
+    }
+
+    if (accepted.length > 0) {
+      setImages((prev) => [
+        ...prev,
+        ...accepted.map((file) => ({ file, url: URL.createObjectURL(file) })),
+      ])
+    }
+  }
+
+  function removeImage(index) {
+    setImages((prev) => {
+      URL.revokeObjectURL(prev[index].url)
+      return prev.filter((_, i) => i !== index)
+    })
+  }
+
+  /* Clipboard paste — only intercept image pastes so plain text keeps
+     its default behaviour. */
+  function handlePaste(e) {
+    const files = Array.from(e.clipboardData?.files || [])
+    if (files.length === 0) return
+    e.preventDefault()
+    addImages(files)
+  }
+
+  /* Revoke preview object URLs when they leave the list (remove or
+     publish); anything still pending is revoked on unmount. */
+  useEffect(() => {
+    return () => {
+      pendingUrlsRef.current.forEach((url) => URL.revokeObjectURL(url))
+    }
+  }, [])
+
   function handlePost(e) {
     e.preventDefault()
     const text = draft.trim()
-    if (!text || posting) return
+    if ((!text && images.length === 0) || posting) return
     setPosting(true)
-    api("/posts", { method: "POST", body: { body: text } })
+
+    const form = new FormData()
+    form.append("body", text)
+    images.forEach(({ file }) => form.append("images[]", file))
+
+    api("/posts", { method: "POST", form })
       .then((payload) => {
         const post = mapPost(payload?.data ?? {})
         setPosts((prev) => [post, ...(prev ?? [])])
         setDraft("")
+        images.forEach(({ url }) => URL.revokeObjectURL(url))
+        setImages([])
         setComposerError("")
       })
       .catch((error) => setComposerError(error.message || "Could not publish your post."))
@@ -161,20 +233,63 @@ function PostFeed({ user, composer = false, emptyText }) {
         <form className="post-composer" onSubmit={handlePost}>
           <div className="post-avatar" aria-hidden="true">{composerAvatar ?? <IconFace />}</div>
           <div className="post-composer-main">
-            <input
-              className="composer-input post-composer-input"
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              placeholder="What is happening?"
-              aria-label="Create a post"
-              maxLength={280}
-            />
+            <div className="post-composer-field">
+              <input
+                className="composer-input post-composer-input"
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onPaste={handlePaste}
+                placeholder="What is happening?"
+                aria-label="Create a post"
+                maxLength={280}
+              />
+              <button
+                type="button"
+                className="post-composer-attach"
+                onClick={() => fileInputRef.current?.click()}
+                aria-label="Add images"
+                title="Add images"
+                disabled={images.length >= MAX_IMAGES}
+              >
+                <IconImage />
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                className="post-composer-file"
+                aria-label="Choose images"
+                onChange={(e) => {
+                  addImages(e.target.files)
+                  e.target.value = "" // re-pick the same file later
+                }}
+              />
+            </div>
+            {images.length > 0 ? (
+              <ul className="post-image-previews">
+                {images.map((img, index) => (
+                  <li key={img.url}>
+                    <img src={img.url} alt={`Attachment ${index + 1}`} />
+                    <button
+                      type="button"
+                      className="post-image-drop"
+                      onClick={() => removeImage(index)}
+                      aria-label={`Remove image ${index + 1}`}
+                      title="Remove"
+                    >
+                      <IconX />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
             <div className="post-composer-row">
               <span className="post-composer-count">{draft.length}/280</span>
               <button
                 type="submit"
                 className="job-btn job-btn-primary"
-                disabled={!draft.trim() || posting}
+                disabled={(!draft.trim() && images.length === 0) || posting}
               >
                 {posting ? "Posting…" : "Post"}
               </button>

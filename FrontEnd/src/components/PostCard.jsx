@@ -123,7 +123,15 @@ function PostCard({ post, onToggleLike, onAddComment, onToggleCommentLike, onRep
         </div>
       </div>
 
-      <p className="post-text">{post.text}</p>
+      {post.text ? <p className="post-text">{post.text}</p> : null}
+
+      {post.images?.length ? (
+        <div className={`post-images has-${Math.min(post.images.length, 4)}`}>
+          {post.images.map((src) => (
+            <img key={src} src={src} alt="" loading="lazy" />
+          ))}
+        </div>
+      ) : null}
 
       <div className="post-actions" role="group" aria-label="Post actions">
         <div className="post-actions-left">

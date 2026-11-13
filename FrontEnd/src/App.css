@@ -1620,6 +1620,88 @@ button.profile-stat:hover strong {
 .post-composer-input {
   border-radius: 12px;
 }
+.post-composer-field {
+  position: relative;
+  display: flex;
+}
+.post-composer-field .post-composer-input {
+  flex: 1;
+  min-width: 0;
+  padding-right: 42px;
+}
+.post-composer-attach {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+.post-composer-attach:hover,
+.post-composer-attach:focus-visible {
+  background-color: var(--highlight);
+  color: var(--text);
+}
+.post-composer-attach:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.post-composer-file {
+  display: none;
+}
+.post-image-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.post-image-previews li {
+  position: relative;
+  width: 72px;
+  height: 72px;
+}
+.post-image-previews img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border-muted);
+  display: block;
+}
+.post-image-drop {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background-color: var(--bg-light);
+  color: var(--text);
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+.post-image-drop:hover,
+.post-image-drop:focus-visible {
+  background-color: var(--highlight);
+  color: var(--danger);
+}
 .post-composer-row {
   display: flex;
   align-items: center;
@@ -1669,6 +1751,41 @@ button.profile-stat:hover strong {
 }
 .post-text {
   white-space: pre-wrap;
+}
+.post-images {
+  display: grid;
+  gap: 4px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-muted);
+}
+.post-images img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background-color: var(--bg-light);
+}
+.post-images.has-1 {
+  grid-template-columns: 1fr;
+}
+.post-images.has-1 img {
+  max-height: 420px;
+  object-fit: contain;
+}
+.post-images.has-2,
+.post-images.has-3,
+.post-images.has-4 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.post-images.has-2 img,
+.post-images.has-3 img,
+.post-images.has-4 img {
+  aspect-ratio: 4 / 3;
+}
+.post-images.has-3 img:first-child {
+  grid-column: 1 / -1;
+  aspect-ratio: 16 / 9;
 }
 .post-tags {
   display: flex;

@@ -67,4 +67,14 @@ class Post extends Model
     {
         return $this->hasMany(Report::class);
     }
+
+    /**
+     * Get the pictures attached to the post, in the order they were added.
+     *
+     * @return HasMany<PostImage, $this>
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(PostImage::class)->orderBy('id');
+    }
 }

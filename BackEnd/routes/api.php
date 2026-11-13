@@ -22,6 +22,9 @@ Route::get('/portfolios/{portfolio}/preview', [PortfolioController::class, 'prev
 Route::get('/users/{user}/avatar', [ProfileController::class, 'avatar'])->whereNumber('user')->name('users.avatar');
 Route::get('/users/{user}/cover', [ProfileController::class, 'cover'])->whereNumber('user')->name('users.cover');
 
+// Post pictures follow the same rule — the feed renders them in <img>.
+Route::get('/posts/{post}/images/{image}', [PostController::class, 'image'])->whereNumber('post')->whereNumber('image')->name('posts.image');
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
     Route::get('/users/me', [AuthController::class, 'me']);

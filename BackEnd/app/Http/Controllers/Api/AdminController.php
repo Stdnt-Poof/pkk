@@ -139,10 +139,12 @@ class AdminController extends Controller
 
     /**
      * Remove a flagged post outright — comments and flags cascade away
-     * with it.
+     * with it, and its picture files leave disk too.
      */
     public function destroyPost(Post $post): Response
     {
+        PostController::discardImages($post);
+
         $post->delete();
 
         return response()->noContent();
